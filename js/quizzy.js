@@ -76,6 +76,17 @@ var quizzy = (function(){
         var radio;
         var label;
         _title.innerHTML = _questions[_quizzy.questionCount].question;
+        // Code from SO
+        var child = _inputWrap.firstChild;
+        var removeNode;
+        while(child){
+            removeNode = null;
+            if(child.tagName == "LABEL"){
+                removeNode = child;
+            }
+            child = child.nextSibling;
+            if(removeNode){removeNode.parentNode.removeChild(removeNode);}
+        }
         for(var i = 0; i <= _questions[_quizzy.questionCount].choices.length-1; i++){
             label = document.createElement("label");
             radio = document.createElement("input");
@@ -87,6 +98,7 @@ var quizzy = (function(){
             _frag.appendChild(label);
         }
         _inputWrap.appendChild(_frag);
+        while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
 
     function addEvent(evt,obj,handler){
