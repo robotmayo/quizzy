@@ -58,9 +58,12 @@ var quizzy = (function(){
         _inputWrap = document.createElement('div');
         _inputWrap.id = "quizzy-input-wrap";
 
+        _buttons = {};
         _buttons.next = document.createElement("button");
         _buttons.next.id = "quizzy-next";
-        addEvent('click',_buttons.next,nextQuestion);
+        _buttons.next.innerHTML = "NEXT";
+        addEvent('click',_buttons.next,_quizzy.nextQuestion);
+
         _frag.appendChild(_title);
         _frag.appendChild(_inputWrap);
         _frag.appendChild(_buttons.next);
@@ -92,7 +95,7 @@ var quizzy = (function(){
         }else if(obj.attachEvent){
             obj.attachEvent("on"+evt,handler);
         }else{
-            throw new Error("The supplied object does not support either event methods.);
+            throw new Error("The supplied object does not support either event methods.");
         }
     }
 
