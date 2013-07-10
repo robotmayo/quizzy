@@ -60,7 +60,7 @@ var quizzy = (function(){
 
         _buttons.next = document.createElement("button");
         _buttons.next.id = "quizzy-next";
-        
+        addEvent('click',_buttons.next,nextQuestion);
         _frag.appendChild(_title);
         _frag.appendChild(_inputWrap);
         _frag.appendChild(_buttons.next);
@@ -84,6 +84,16 @@ var quizzy = (function(){
             _frag.appendChild(label);
         }
         _inputWrap.appendChild(_frag);
+    }
+
+    function addEvent(evt,obj,handler){
+        if(obj.addEventListener){
+            obj.addEventListener(evt,handler,false);
+        }else if(obj.attachEvent){
+            obj.attachEvent("on"+evt,handler);
+        }else{
+            throw new Error("The supplied object does not support either event methods.);
+        }
     }
 
     
