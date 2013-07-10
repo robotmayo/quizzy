@@ -34,6 +34,7 @@ var quizzy = (function(){
     var _frag;
     var _title;
     var _inputWrap;
+    var _buttons;
 
     _quizzy.currentQuestion;
     _quizzy.questionCount = -1;
@@ -56,9 +57,15 @@ var quizzy = (function(){
 
         _inputWrap = document.createElement('div');
         _inputWrap.id = "quizzy-input-wrap";
+
+        _buttons.next = document.createElement("button");
+        _buttons.next.id = "quizzy-next";
+        
         _frag.appendChild(_title);
         _frag.appendChild(_inputWrap);
+        _frag.appendChild(_buttons.next);
         _quizContainer.appendChild(_frag);
+        
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     _quizzy.nextQuestion = function(){
