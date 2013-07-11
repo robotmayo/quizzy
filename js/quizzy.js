@@ -72,6 +72,7 @@ var quizzy = (function(){
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     _quizzy.nextQuestion = function(){
+        _quizzy.checkAnswer();
         _quizzy.questionCount++;
         var radio;
         var label;
@@ -87,7 +88,7 @@ var quizzy = (function(){
             child = child.nextSibling;
             if(removeNode){removeNode.parentNode.removeChild(removeNode);}
         }
-        for(var i = 0; i <= _questions[_quizzy.questionCount].choices.length-1; i++){
+        for(var i = 0; i < _questions[_quizzy.questionCount].choices.length; i++){
             label = document.createElement("label");
             radio = document.createElement("input");
             radio.type = 'radio';
@@ -99,6 +100,17 @@ var quizzy = (function(){
         }
         _inputWrap.appendChild(_frag);
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
+    }
+    
+    _quizzy.checkAnswer = function(){
+        if(_quizzy.questionCount < 0) return;
+        var choice;
+        for(var i = 0; i < _answerElements.length; i++){
+            if(_answerElements[i].checked){
+                choice = _answerElements[i].value;
+            }
+        }
+        if(choice == _questions[_quizzy.questionCount].answer) _score++;
     }
 
     function addEvent(evt,obj,handler){
