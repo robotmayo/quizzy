@@ -38,7 +38,7 @@ var quizzy = (function(){
     var _buttons;
 
     _quizzy.currentQuestion;
-    _quizzy.questionCount = -1;
+    _quizzy.questionCount;
     _quizzy.totalQuestions;
     _quizzy.init = function(){
         // Duplicates the questions into this internal array
@@ -48,7 +48,8 @@ var quizzy = (function(){
         if(_quizContainer == null){
             throw new Error("Couldn't find quizzy starting element. Aborting mission!");
         }
-        _score = 5;
+        _score = 0;
+        _quizzy.questionCount = 0;
         _quizzy.setupElements();
         _quizzy.nextQuestion();
     }
@@ -74,7 +75,6 @@ var quizzy = (function(){
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     _quizzy.nextQuestion = function(){
-        _quizzy.questionCount++;
         var radio;
         var label;
         _title.innerHTML = _questions[_quizzy.questionCount].question;
@@ -106,7 +106,6 @@ var quizzy = (function(){
     }
     
     _quizzy.checkAnswer = function(){
-        if(_quizzy.questionCount < 0) return;
         var choice;
         var inputs = _inputWrap.getElementsByTagName("input");
         for(var i = 0; i < inputs.length; i++){
@@ -118,7 +117,11 @@ var quizzy = (function(){
             if(choice == _questions[_quizzy.questionCount].choices[_answer]) {
                 _score++;
             }
-            _quizzy.nextQuestion();
+            if(_questions[++_quizzy.questionCount]){
+                _quizzy.nextQuestion();
+            }else{
+                _quizzy.complete();
+            }
         }else{
             alert("You didn't input anything!");
         }
@@ -128,6 +131,18 @@ var quizzy = (function(){
     }
     _quizzy.getRawScore = function(){
         return _score;
+    }
+    _quizzy.complete = function(){
+        _title.remove();
+        var child = _inputWrap.firstChild;
+        while(child){
+            removeNode = child;
+            child = child.nextSibling;
+            if(removeNode){removeNode.parentNode.removeChild(removeNode);}
+        }
+        var congratsMsg = document.createElement('h2');
+        congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
+        _quizContainer.insertBefore(congratsMsg,_quizContainer.firstChild);
     }
 
     function addEvent(evt,obj,handler){
@@ -143,4 +158,4 @@ var quizzy = (function(){
     
     return _quizzy;
 }());
-window.onload = function(){quizzy.init();}
+window.onload = function(){quizzy.init()}
