@@ -29,8 +29,9 @@ function shuffleArray(array){
 var quizzy = (function(){
     var _quizzy = {};
     var _questions;
+    var _answer; // Not the actual answer but rather the index of the answer.
+    var _score;
     var _quizContainer;
-    var _answerElements;
     var _frag;
     var _title;
     var _inputWrap;
@@ -47,6 +48,7 @@ var quizzy = (function(){
         if(_quizContainer == null){
             throw new Error("Couldn't find quizzy starting element. Aborting mission!");
         }
+        _score = 5;
         _quizzy.setupElements();
         _quizzy.nextQuestion();
     }
@@ -62,7 +64,7 @@ var quizzy = (function(){
         _buttons.next = document.createElement("button");
         _buttons.next.id = "quizzy-next";
         _buttons.next.innerHTML = "NEXT";
-        addEvent('click',_buttons.next,_quizzy.nextQuestion);
+        addEvent('click',_buttons.next,_quizzy.checkAnswer);
 
         _frag.appendChild(_title);
         _frag.appendChild(_inputWrap);
@@ -72,11 +74,11 @@ var quizzy = (function(){
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     _quizzy.nextQuestion = function(){
-        _quizzy.checkAnswer();
         _quizzy.questionCount++;
         var radio;
         var label;
         _title.innerHTML = _questions[_quizzy.questionCount].question;
+        _answer = _questions[_quizzy.questionCount].answer;
         // Code from SO
         var child = _inputWrap.firstChild;
         var removeNode;
@@ -88,6 +90,7 @@ var quizzy = (function(){
             child = child.nextSibling;
             if(removeNode){removeNode.parentNode.removeChild(removeNode);}
         }
+        
         for(var i = 0; i < _questions[_quizzy.questionCount].choices.length; i++){
             label = document.createElement("label");
             radio = document.createElement("input");
@@ -105,12 +108,26 @@ var quizzy = (function(){
     _quizzy.checkAnswer = function(){
         if(_quizzy.questionCount < 0) return;
         var choice;
-        for(var i = 0; i < _answerElements.length; i++){
-            if(_answerElements[i].checked){
-                choice = _answerElements[i].value;
+        var inputs = _inputWrap.getElementsByTagName("input");
+        for(var i = 0; i < inputs.length; i++){
+            if(inputs[i].checked){
+                choice = inputs[i].value;
             }
         }
-        if(choice == _questions[_quizzy.questionCount].answer) _score++;
+        if(choice){
+            if(choice == _questions[_quizzy.questionCount].choices[_answer]) {
+                _score++;
+            }
+            _quizzy.nextQuestion();
+        }else{
+            alert("You didn't input anything!");
+        }
+    }
+    _quizzy.calculateScore = function(){
+        return _score + getRandom(1,99); // trololol
+    }
+    _quizzy.getRawScore = function(){
+        return _score;
     }
 
     function addEvent(evt,obj,handler){
@@ -126,18 +143,4 @@ var quizzy = (function(){
     
     return _quizzy;
 }());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 $(document).ready(quizzy.init);
