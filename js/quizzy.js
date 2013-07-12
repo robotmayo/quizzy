@@ -143,4 +143,4 @@ var quizzy = (function(){
     
     return _quizzy;
 }());
-$(document).ready(quizzy.init);
+window.onload = function(){quizzy.init();}
