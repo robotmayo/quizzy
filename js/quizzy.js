@@ -90,90 +90,6 @@ Timer.prototype.printTime = function() {
 };
 
 var quizzy = (function(){
-
-    var LinkedList = function(){
-        var _ll = {};
-        var _first;
-        var _last;
-        var _size = 0;
-        _ll.push = function(val){
-            var node = new Node(val);
-            if(_size === 0){
-                _first = _last = node;
-            }else{
-                _last.next = node;
-                node.prev = _last;
-                _last = node;
-            }
-            _size++;
-            return node;
-        };
-
-        _ll.pop = function(){
-            var val = _last;
-            _last = _last.prev;
-            _size--;
-            return val;
-        };
-        _ll.shift = function(){
-            var val = _first;
-            _first = _first.next;
-            _size--;
-            return val;
-        }
-
-        _ll.remove = function(index){
-            var current = _first
-            var val;
-            if(index === 0){
-                _size--;
-                return this.shift();
-            }
-            if(index === _size){
-                return this.pop();
-            }
-            while(index--){
-                current = current.next;
-            }
-            val = current;
-            // Links the broken nodes together
-            current.prev.next = current.next;
-            current.next.prev = current.prev;
-            return val;
-        };
-
-        _ll.get = function(index){
-            var current;
-            if(index === 0) return _first;
-            if(index === size-1) return _last;
-            current = first;
-            while(index--){
-                current = current.next;
-            }
-            return current;
-        }
-        _ll.size = function(){return _size;}
-
-        _ll.getFirst = function(){
-            return _first;
-        }
-        _ll.getLast = function(){
-            return _last;
-        }
-        _ll.arrayToList = function(arr){
-            for(var i = 0; i < arr.length; i++){
-                _ll.push(arr[i]);
-            }
-        }
-        var Node = function(val){
-            this.value = val;
-            var next = {};
-            var prev = {};
-        };
-        return _ll;
-}
-
-
     var _quizzy = {};
 
     // Data
@@ -181,6 +97,7 @@ var quizzy = (function(){
     var _tQuestions;
     var _answer; // Not the actual answer but rather the index of the answer.
     var _score;
+    var _currentQuestion;
 
     // Display
     var _quizContainer;
@@ -199,6 +116,7 @@ var quizzy = (function(){
         _quizzy.questions = _questions;
         _tQuestions = new LinkedList();
         _tQuestions.arrayToList(_questions);
+        _currentQuestion = _tQuestions.getFirst();
         _quizContainer = document.getElementById("quizzy");
         if(_quizContainer == null){
             throw new Error("Couldn't find quizzy starting element. Aborting mission!");
@@ -240,7 +158,7 @@ var quizzy = (function(){
 
     }
     _quizzy.nextQuestion = function(){
-        _currentQuestion = getNextQuestion();
+        _currentQuestion = _quizzy.getNextQuestion();
         if(!_currentQuestion) _quizzy.end();
         var radio;
         var label;
@@ -294,7 +212,7 @@ var quizzy = (function(){
         }
     }
     _quizzy.calculateScore = function(){
-        return _score + getRandom(1,99); // trololol
+        return _score;
     }
     _quizzy.getRawScore = function(){
         return _score;
@@ -325,4 +243,85 @@ var quizzy = (function(){
     
     return _quizzy;
 }());
+var LinkedList = function(){
+    var _ll = {};
+    var _first;
+    var _last;
+    var _size = 0;
+    _ll.push = function(val){
+        var node = new Node(val);
+        if(_size === 0){
+            _first = _last = node;
+        }else{
+            _last.next = node;
+            node.prev = _last;
+            _last = node;
+        }
+        _size++;
+        return node;
+    };
+
+    _ll.pop = function(){
+        var val = _last;
+        _last = _last.prev;
+        _size--;
+        return val;
+    };
+    _ll.shift = function(){
+        var val = _first;
+        _first = _first.next;
+        _size--;
+        return val;
+    }
+
+    _ll.remove = function(index){
+        var current = _first
+        var val;
+        if(index === 0){
+            _size--;
+            return this.shift();
+        }
+        if(index === _size){
+            return this.pop();
+        }
+        while(index--){
+            current = current.next;
+        }
+        val = current;
+        // Links the broken nodes together
+        current.prev.next = current.next;
+        current.next.prev = current.prev;
+        return val;
+    };
+
+    _ll.get = function(index){
+        var current;
+        if(index === 0) return _first;
+        if(index === size-1) return _last;
+        current = first;
+        while(index--){
+            current = current.next;
+        }
+        return current;
+    }
+    _ll.size = function(){return _size;}
+
+    _ll.getFirst = function(){
+        return _first;
+    }
+    _ll.getLast = function(){
+        return _last;
+    }
+    _ll.arrayToList = function(arr){
+        for(var i = 0; i < arr.length; i++){
+            _ll.push(arr[i]);
+        }
+    }
+    var Node = function(val){
+        this.value = val;
+        var next = {};
+        var prev = {};
+    };
+    return _ll;
+}
 window.onload = function(){quizzy.init()}
