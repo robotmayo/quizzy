@@ -1,4 +1,4 @@
-var LinkedList = function(arr){
+var LinkedList = function(){
         var _ll = {};
         var _first;
         var _last;
@@ -52,14 +52,14 @@ var LinkedList = function(arr){
         _ll.get = function(index){
             var current;
             if(index === 0) return _first;
-            if(index === size-1) return _last;
-            current = first;
+            if(index === _size) return _last;
+            current = _first;
             while(index--){
                 current = current.next;
             }
             return current;
         }
-        _ll.getSize = function(){return _size;}
+        _ll.size = function(){return _size;}
 
         _ll.getFirst = function(){
             return _first;

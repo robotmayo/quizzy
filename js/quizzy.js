@@ -91,7 +91,7 @@ Timer.prototype.printTime = function() {
 
 var quizzy = (function(){
 
-    var LinkedList = function(arr){
+    var LinkedList = function(){
         var _ll = {};
         var _first;
         var _last;
@@ -152,13 +152,18 @@ var quizzy = (function(){
             }
             return current;
         }
-        _ll.getSize = function(){return _size;}
+        _ll.size = function(){return _size;}
 
         _ll.getFirst = function(){
             return _first;
         }
         _ll.getLast = function(){
             return _last;
+        }
+        _ll.arrayToList = function(arr){
+            for(var i = 0; i < arr.length; i++){
+                _ll.push(arr[i]);
+            }
         }
         var Node = function(val){
             this.value = val;
@@ -173,6 +178,7 @@ var quizzy = (function(){
 
     // Data
     var _questions;
+    var _tQuestions;
     var _answer; // Not the actual answer but rather the index of the answer.
     var _score;
 
@@ -185,11 +191,14 @@ var quizzy = (function(){
 
     _quizzy.currentQuestion;
     _quizzy.questionCount;
-    _quizzy.totalQuestions;
+    _quizzy.questions;
     _quizzy.init = function(){
         // Duplicates the questions into this internal array
         _questions = questions.slice();
         shuffleArray(_questions);
+        _quizzy.questions = _questions;
+        _tQuestions = new LinkedList();
+        _tQuestions.arrayToList(_questions);
         _quizContainer = document.getElementById("quizzy");
         if(_quizContainer == null){
             throw new Error("Couldn't find quizzy starting element. Aborting mission!");
@@ -222,12 +231,7 @@ var quizzy = (function(){
     }
     
     _quizzy.getNextQuestion = function(){
-        if(_questions[_questionIndex+1]){
-            _currentQuestion = _questions[++_questionIndex];
-            return _currentQuestion;
-        }
-        return false;
-        
+        return _currentQuestion.next;
     }
     _quizzy.jumpToQuestion = function(n){
 
@@ -236,6 +240,8 @@ var quizzy = (function(){
 
     }
     _quizzy.nextQuestion = function(){
+        _currentQuestion = getNextQuestion();
+        if(!_currentQuestion) _quizzy.end();
         var radio;
         var label;
         _title.innerHTML = _questions[_quizzy.questionCount].question;
@@ -293,7 +299,7 @@ var quizzy = (function(){
     _quizzy.getRawScore = function(){
         return _score;
     }
-    _quizzy.complete = function(){
+    _quizzy.end = function(){
         _title.remove();
         var child = _inputWrap.firstChild;
         while(child){
