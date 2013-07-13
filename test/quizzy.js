@@ -6,7 +6,7 @@ var quizzy = (function(){
     var _tQuestions;
     var _answer; // Not the actual answer but rather the index of the answer.
     var _score;
-    var _currentQuestion;
+    var _currentQuestion; // Refers to the node of the question not the question data itself.
 
     // Display
     var _quizContainer;
@@ -37,7 +37,23 @@ var quizzy = (function(){
         _quizzy.start();
     }
     _quizzy.start = function(){
+        _currentQuestion = _questions.getFirst();
         _quizzy.updateQuizInterface();
+    }
+    _quizzy.updateQuizInterface = function(){
+
+    }
+    _quizzy.createInput = function(type,count){
+        type = type || 'radio';
+        type = type.toLowerCase();
+        count = count || 1;
+        var inputs = [];
+        for(var i = count; i > 0; i--){
+            if(type=='radio'){
+                inputs.push(_quizzy.createRadioButton('quizzy-radio'))
+            }
+        }
+        return inputs;
     }
     _quizzy.createQuizInterface = function(){
         _frag = document.createDocumentFragment();
