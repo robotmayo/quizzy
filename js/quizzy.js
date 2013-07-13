@@ -26,70 +26,162 @@ function shuffleArray(array){
         array[store] = swap;
     }
 }
+// Constants
+    var _hours = 1000 * 60 * 60;
+    var _minutes = 1000 * 60;
+    var _seconds = 1000;
+
+Timer = function(tick,handler,start){
+    this.handler = handler || null;
+    this.tick = tick || 20;
+    this.elapsed = 0;
+    this.last = 0;
+    this.clock = 0;
+    this.minutes = 0;
+    this.seconds = 0;
+    this.milliseconds = 0;
+    console.log(this.tick);
+
+    if(start){
+        this.start();
+    }
+}
+Timer.prototype.start = function() {
+    console.log(this.tick);
+    this.last = Date.now();
+    var self = this;
+    this.intervalId = setInterval(function(){
+        self.update();
+    },this.tick);
+};
+Timer.prototype.stop = function() {
+    clearInterval(this.intervalId);
+};
+Timer.prototype.update = function(){
+    this.elapsed = Date.now() - this.last;
+    this.clock += this.elapsed;
+    this.milliseconds += elapsed;
+
+    this.seconds += Math.floor(this.milliseconds / _seconds);
+    this.minutes += Math.floor(this.seconds / 60);
+    this.hours = Math.floor(this.clock / _hours);
+    if(this.seconds > 60) this.seconds = 0;
+    if(this.minutes > 60) this.
+    this.last = Date.now();
+};
+Timer.prototype.getTime = function() {
+    return {
+        hours:this.hours,
+        minutes:this.minutes,
+        seconds:this.seconds,
+        milliseconds:this.clock
+    };
+};
+Timer.prototype.printTime = function() {
+    var time = this.getTime();
+    var hr;
+    var min;
+    var sec;
+    hr = time.hours;
+    min = time.minutes < 10 ? "0"+time.minutes : time.minutes;
+    sec = time.seconds < 10 ? "0"+time.seconds : time.seconds;
+    console.log(hr+":"+min+":"+sec);
+
+};
+
 var quizzy = (function(){
+
+    var LinkedList = function(arr){
+        var _ll = {};
+        var _first;
+        var _last;
+        var _size = 0;
+        _ll.push = function(val){
+            var node = new Node(val);
+            if(_size === 0){
+                _first = _last = node;
+            }else{
+                _last.next = node;
+                node.prev = _last;
+                _last = node;
+            }
+            _size++;
+            return node;
+        };
+
+        _ll.pop = function(){
+            var val = _last;
+            _last = _last.prev;
+            _size--;
+            return val;
+        };
+        _ll.shift = function(){
+            var val = _first;
+            _first = _first.next;
+            _size--;
+            return val;
+        }
+
+        _ll.remove = function(index){
+            var current = _first
+            var val;
+            if(index === 0){
+                _size--;
+                return this.shift();
+            }
+            if(index === _size){
+                return this.pop();
+            }
+            while(index--){
+                current = current.next;
+            }
+            val = current;
+            // Links the broken nodes together
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            return val;
+        };
+
+        _ll.get = function(index){
+            var current;
+            if(index === 0) return _first;
+            if(index === size-1) return _last;
+            current = first;
+            while(index--){
+                current = current.next;
+            }
+            return current;
+        }
+        _ll.getSize = function(){return _size;}
+
+        _ll.getFirst = function(){
+            return _first;
+        }
+        _ll.getLast = function(){
+            return _last;
+        }
+        var Node = function(val){
+            this.value = val;
+            var next = {};
+            var prev = {};
+        };
+        return _ll;
+}
+
+
     var _quizzy = {};
+
+    // Data
     var _questions;
     var _answer; // Not the actual answer but rather the index of the answer.
     var _score;
+
+    // Display
     var _quizContainer;
     var _frag;
     var _title;
     var _inputWrap;
     var _buttons;
-
-    // Constants
-    var _hour = 1000 * 60 * 60;
-    var _minutes = 1000 * 60;
-    var _seconds = 1000;
-
-    Timer = function(tick,handler,start){
-        this.handler = handler || null;
-        this.tick = tick || 20;
-        this.elapsed = 0;
-        this.last = 0;
-        this.clock = 0;
-        this.minutes = 0;
-        this.seconds = 0;
-        this.milliseconds = 0;
-        console.log(this.tick);
-
-        if(start){
-            this.start();
-        }
-    }
-    Timer.prototype.start = function() {
-        console.log(this.tick);
-        this.last = Date.now();
-        var self = this;
-        this.intervalId = setInterval(function(){
-            self.update();
-        },this.tick);
-    };
-    Timer.prototype.stop = function() {
-        clearInterval(this.intervalId);
-    };
-    Timer.prototype.update = function(){
-        this.elapsed = Date.now() - this.last;
-        this.clock += this.elapsed;
-        if(this.clock > _seconds){
-            this.seconds += Math.floor(this.clock / _seconds);
-            this.clock = 0;
-        }
-        if(this.seconds > 60){
-            this.minutes += Math.floor(this.seconds / 60);
-        }
-        if(this.minutes > 60){
-            this.hours += Math.floor(this.minutes / 60);
-        }
-        this.last = Date.now();
-        this.printTime();
-    }
-    Timer.prototype.getTime = function() {
-        return this.sTime;
-    };
-    Timer.prototype.printTime = function() {
-        console.log(this.seconds);
-    };
 
     _quizzy.currentQuestion;
     _quizzy.questionCount;
@@ -127,6 +219,21 @@ var quizzy = (function(){
         _quizContainer.appendChild(_frag);
         
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
+    }
+    
+    _quizzy.getNextQuestion = function(){
+        if(_questions[_questionIndex+1]){
+            _currentQuestion = _questions[++_questionIndex];
+            return _currentQuestion;
+        }
+        return false;
+        
+    }
+    _quizzy.jumpToQuestion = function(n){
+
+    }
+    _quizzy.prevQuestion = function(){
+
     }
     _quizzy.nextQuestion = function(){
         var radio;
