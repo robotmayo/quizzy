@@ -1,0 +1,14 @@
+var questions = [
+{question: "What is 150 * 0?",
+choices : ["0","-150","150","42"],
+answer : 0
+},
+{question: "Is sexy back?",
+choices : ["yes","no","Only on Tuesdays"],
+answer : 2
+},
+{question: "How much wood could a woodchuck chuck if a woodchuck could chuck wood?",
+choices : ["11","4231","yes","BUTTERED TOAST"],
+answer : 3
+}
+];
