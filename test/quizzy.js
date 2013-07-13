@@ -1,3 +1,18 @@
+var quizzyUtils = {};
+quizzyUtils.getRandom = function(min,max){
+    return min + Math.floor(Math.random() * (max - min + 1));
+}
+// Shuffle array in place
+quizzyUtils.shuffleArray = function(array){
+    var swap;
+    var store;
+    for(var i = array.length-1; i >= 0; i--){
+        store = this.getRandom(0,i);
+        swap = array[i];
+        array[i] = array[store];
+        array[store] = swap;
+    }
+}
 var quizzy = (function(){
     var _quizzy = {};
 
@@ -43,17 +58,25 @@ var quizzy = (function(){
     _quizzy.updateQuizInterface = function(){
 
     }
-    _quizzy.createInput = function(type,count){
+    _quizzy.createInput = function(type,values){
         type = type || 'radio';
         type = type.toLowerCase();
-        count = count || 1;
+        values = values || _currentQuestion.value.choices;
         var inputs = [];
-        for(var i = count; i > 0; i--){
+        for(var i = 0; i <= values.length; i++){
             if(type=='radio'){
-                inputs.push(_quizzy.createRadioButton('quizzy-radio'))
+                inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
             }
         }
         return inputs;
+    }
+    _quizzy.createRadioButton = function(name,value,id){
+        var radioBtn = document.createElement('input');
+        radioBtn.type = 'radio';
+        radioBtn.name = name;
+        radioBtn.value = value || '';
+        radioBtn.id = id || '';
+        return radioBtn;
     }
     _quizzy.createQuizInterface = function(){
         _frag = document.createDocumentFragment();
