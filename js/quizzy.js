@@ -37,6 +37,60 @@ var quizzy = (function(){
     var _inputWrap;
     var _buttons;
 
+    // Constants
+    var _hour = 1000 * 60 * 60;
+    var _minutes = 1000 * 60;
+    var _seconds = 1000;
+
+    Timer = function(tick,handler,start){
+        this.handler = handler || null;
+        this.tick = tick || 20;
+        this.elapsed = 0;
+        this.last = 0;
+        this.clock = 0;
+        this.minutes = 0;
+        this.seconds = 0;
+        this.milliseconds = 0;
+        console.log(this.tick);
+
+        if(start){
+            this.start();
+        }
+    }
+    Timer.prototype.start = function() {
+        console.log(this.tick);
+        this.last = Date.now();
+        var self = this;
+        this.intervalId = setInterval(function(){
+            self.update();
+        },this.tick);
+    };
+    Timer.prototype.stop = function() {
+        clearInterval(this.intervalId);
+    };
+    Timer.prototype.update = function(){
+        this.elapsed = Date.now() - this.last;
+        this.clock += this.elapsed;
+        if(this.clock > _seconds){
+            this.seconds += Math.floor(this.clock / _seconds);
+            this.clock = 0;
+        }
+        if(this.seconds > 60){
+            this.minutes += Math.floor(this.seconds / 60);
+        }
+        if(this.minutes > 60){
+            this.hours += Math.floor(this.minutes / 60);
+        }
+        this.last = Date.now();
+        this.printTime();
+    }
+    Timer.prototype.getTime = function() {
+        return this.sTime;
+    };
+    Timer.prototype.printTime = function() {
+        console.log(this.seconds);
+    };
+
     _quizzy.currentQuestion;
     _quizzy.questionCount;
     _quizzy.totalQuestions;

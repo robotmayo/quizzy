@@ -2,6 +2,7 @@
 ## Eclipse
 #################
 lib/
+test/
 *.sublime-*
 *.pydevproject
 .project
