@@ -33,13 +33,13 @@ var quizzy = (function(){
         }
         _score = 0;
         _quizzy.questionCount = _questions.size();
-        _quizzy.setupElements();
+        _quizzy.createQuizInterface();
         _quizzy.start();
     }
     _quizzy.start = function(){
-
+        _quizzy.updateQuizInterface();
     }
-    _quizzy.setupElements = function(){
+    _quizzy.createQuizInterface = function(){
         _frag = document.createDocumentFragment();
         _title = document.createElement('h2');
         _title.id = "quizzy-title";
