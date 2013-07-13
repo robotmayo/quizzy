@@ -1,93 +1,18 @@
-var questions = [
-{question: "What is 150 * 0?",
-choices : ["0","-150","150","42"],
-answer : 0
-},
-{question: "Is sexy back?",
-choices : ["yes","no","Only on Tuesdays"],
-answer : 2
-},
-{question: "How much wood could a woodchuck chuck if a woodchuck could chuck wood?",
-choices : ["11","4231","yes","BUTTERED TOAST"],
-answer : 3
-}
-];
-function getRandom(min, max) {
+var quizzyUtils = {};
+quizzyUtils.getRandom = function(min,max){
     return min + Math.floor(Math.random() * (max - min + 1));
 }
-// Shuffles the array in place
-function shuffleArray(array){
+// Shuffle array in place
+quizzyUtils.shuffleArray = function(array){
     var swap;
     var store;
     for(var i = array.length-1; i >= 0; i--){
-        store = getRandom(0,i);
+        store = this.getRandom(0,i);
         swap = array[i];
         array[i] = array[store];
         array[store] = swap;
     }
 }
-// Constants
-    var _hours = 1000 * 60 * 60;
-    var _minutes = 1000 * 60;
-    var _seconds = 1000;
-
-Timer = function(tick,handler,start){
-    this.handler = handler || null;
-    this.tick = tick || 20;
-    this.elapsed = 0;
-    this.last = 0;
-    this.clock = 0;
-    this.minutes = 0;
-    this.seconds = 0;
-    this.milliseconds = 0;
-    console.log(this.tick);
-
-    if(start){
-        this.start();
-    }
-}
-Timer.prototype.start = function() {
-    console.log(this.tick);
-    this.last = Date.now();
-    var self = this;
-    this.intervalId = setInterval(function(){
-        self.update();
-    },this.tick);
-};
-Timer.prototype.stop = function() {
-    clearInterval(this.intervalId);
-};
-Timer.prototype.update = function(){
-    this.elapsed = Date.now() - this.last;
-    this.clock += this.elapsed;
-    this.milliseconds += elapsed;
-
-    this.seconds += Math.floor(this.milliseconds / _seconds);
-    this.minutes += Math.floor(this.seconds / 60);
-    this.hours = Math.floor(this.clock / _hours);
-    if(this.seconds > 60) this.seconds = 0;
-    if(this.minutes > 60) this.
-    this.last = Date.now();
-};
-Timer.prototype.getTime = function() {
-    return {
-        hours:this.hours,
-        minutes:this.minutes,
-        seconds:this.seconds,
-        milliseconds:this.clock
-    };
-};
-Timer.prototype.printTime = function() {
-    var time = this.getTime();
-    var hr;
-    var min;
-    var sec;
-    hr = time.hours;
-    min = time.minutes < 10 ? "0"+time.minutes : time.minutes;
-    sec = time.seconds < 10 ? "0"+time.seconds : time.seconds;
-    console.log(hr+":"+min+":"+sec);
-
-};
 
 var quizzy = (function(){
     var _quizzy = {};
@@ -112,7 +37,7 @@ var quizzy = (function(){
     _quizzy.init = function(){
         // Duplicates the questions into this internal array
         _questions = questions.slice();
-        shuffleArray(_questions);
+        quizzyUtils.shuffleArray(_questions);
         _quizzy.questions = _questions;
         _tQuestions = new LinkedList();
         _tQuestions.arrayToList(_questions);
@@ -205,7 +130,7 @@ var quizzy = (function(){
             if(_questions[++_quizzy.questionCount]){
                 _quizzy.nextQuestion();
             }else{
-                _quizzy.complete();
+                _quizzy.end();
             }
         }else{
             alert("You didn't input anything!");
@@ -324,4 +249,66 @@ var LinkedList = function(){
     };
     return _ll;
 }
-window.onload = function(){quizzy.init()}
+
+// Constants
+    var _hours = 1000 * 60 * 60;
+    var _minutes = 1000 * 60;
+    var _seconds = 1000;
+
+Timer = function(tick,handler,start){
+    this.handler = handler || null;
+    this.tick = tick || 20;
+    this.elapsed = 0;
+    this.last = 0;
+    this.clock = 0;
+    this.minutes = 0;
+    this.seconds = 0;
+    this.milliseconds = 0;
+    console.log(this.tick);
+
+    if(start){
+        this.start();
+    }
+}
+Timer.prototype.start = function() {
+    console.log(this.tick);
+    this.last = Date.now();
+    var self = this;
+    this.intervalId = setInterval(function(){
+        self.update();
+    },this.tick);
+};
+Timer.prototype.stop = function() {
+    clearInterval(this.intervalId);
+};
+Timer.prototype.update = function(){
+    this.elapsed = Date.now() - this.last;
+    this.clock += this.elapsed;
+    this.milliseconds += elapsed;
+
+    this.seconds += Math.floor(this.milliseconds / _seconds);
+    this.minutes += Math.floor(this.seconds / 60);
+    this.hours = Math.floor(this.clock / _hours);
+    if(this.seconds > 60) this.seconds = 0;
+    if(this.minutes > 60) this.
+    this.last = Date.now();
+};
+Timer.prototype.getTime = function() {
+    return {
+        hours:this.hours,
+        minutes:this.minutes,
+        seconds:this.seconds,
+        milliseconds:this.clock
+    };
+};
+Timer.prototype.printTime = function() {
+    var time = this.getTime();
+    var hr;
+    var min;
+    var sec;
+    hr = time.hours;
+    min = time.minutes < 10 ? "0"+time.minutes : time.minutes;
+    sec = time.seconds < 10 ? "0"+time.seconds : time.seconds;
+    console.log(hr+":"+min+":"+sec);
+
+};
