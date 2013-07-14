@@ -38,7 +38,11 @@ var quizzy = (function(){
     // Data
     var _questions;
     var _score;
-    var _defaultSettings;
+    var _defaultSettings = {
+        allowBackTrack : false,
+        showHistory : false,
+        backDistance : 0
+    }
 
     // Display
     var _quizContainer;
