@@ -91,6 +91,7 @@ var quizzy = (function(){
     _quizzy.updateQuizInterface = function(){
         var inputs;
         var i;
+        _title.innerHTML = _currentQuestion.value.question;
         var frag = document.createDocumentFragment();
         var child = _inputWrap.firstChild;
         var removeNode;
@@ -178,35 +179,11 @@ var quizzy = (function(){
     }
     _quizzy.nextQuestion = function(){
         _currentQuestion = _quizzy.getNextQuestion();
-        if(!_currentQuestion) _quizzy.end();
-        var radio;
-        var label;
-        _title.innerHTML = _questions[_quizzy.questionCount].question;
-        _answer = _questions[_quizzy.questionCount].answer;
-        // Code from SO
-        var child = _inputWrap.firstChild;
-        var removeNode;
-        while(child){
-            removeNode = null;
-            if(child.tagName == "LABEL"){
-                removeNode = child;
-            }
-            child = child.nextSibling;
-            if(removeNode){removeNode.parentNode.removeChild(removeNode);}
+        if(!_currentQuestion) {
+            _quizzy.end();
+        }else{
+            _quizzy.updateQuizInterface();
         }
-        
-        for(var i = 0; i < _questions[_quizzy.questionCount].choices.length; i++){
-            label = document.createElement("label");
-            radio = document.createElement("input");
-            radio.type = 'radio';
-            radio.name = 'quizzy-radio';
-            radio.value = _questions[_quizzy.questionCount].choices[i];
-            label.appendChild(radio);
-            label.innerHTML += " "+_questions[_quizzy.questionCount].choices[i];
-            _frag.appendChild(label);
-        }
-        _inputWrap.appendChild(_frag);
-        while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     
     _quizzy.checkAnswer = function(){
@@ -218,14 +195,10 @@ var quizzy = (function(){
             }
         }
         if(choice){
-            if(choice == _questions[_quizzy.questionCount].choices[_answer]) {
-                _score++;
+            if(choice == _currentQuestion.value.answer) {
+                _score += _currentQuestion.value.score;
             }
-            if(_questions[++_quizzy.questionCount]){
-                _quizzy.nextQuestion();
-            }else{
-                _quizzy.end();
-            }
+            _quizzy.nextQuestion();
         }else{
             alert("You didn't input anything!");
         }
