@@ -96,8 +96,8 @@ var quizzy = (function(){
     }
     _quizzy.wrapInLabel = function(input,value){
         var label = document.createElement('label');
-        label.innerHTML = value || input.value;
         label.appendChild(input);
+        label.innerHTML += value || input.value;
         return label;
     }
     _quizzy.createInput = function(type,values){
