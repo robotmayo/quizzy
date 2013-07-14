@@ -37,10 +37,7 @@ var quizzy = (function(){
 
     // Data
     var _questions;
-    var _tQuestions;
-    var _answer; // Not the actual answer but rather the index of the answer.
     var _score;
-    var _currentQuestion; // Refers to the node of the question not the question data itself.
 
     // Display
     var _quizContainer;
@@ -50,7 +47,6 @@ var quizzy = (function(){
     var _buttons;
 
     _quizzy.currentQuestion;
-    _quizzy.questionCount;
     _quizzy.questions;
 
     QuizzyQuestion = function(q){
@@ -85,13 +81,13 @@ var quizzy = (function(){
         _quizzy.start();
     }
     _quizzy.start = function(){
-        _currentQuestion = _questions.getFirst();
+        _quizzy.currentQuestion = _questions.getFirst();
         _quizzy.updateQuizInterface();
     }
     _quizzy.updateQuizInterface = function(){
         var inputs;
         var i;
-        _title.innerHTML = _currentQuestion.value.question;
+        _title.innerHTML = _quizzy.currentQuestion.value.question;
         var frag = document.createDocumentFragment();
         var child = _inputWrap.firstChild;
         var removeNode;
@@ -103,7 +99,7 @@ var quizzy = (function(){
             child = child.nextSibling;
             if(removeNode) removeNode.parentNode.removeChild(removeNode);
         }
-        inputs = _quizzy.createInput('radio',_currentQuestion.value.choices);
+        inputs = _quizzy.createInput('radio',_quizzy.currentQuestion.value.choices);
         for(i = 0; i < inputs.length; i++){
             frag.appendChild(_quizzy.wrapInLabel(inputs[i]));
         }
@@ -128,7 +124,7 @@ var quizzy = (function(){
                 }
             }
         }else{
-            values = values || _currentQuestion.value.choices;
+            values = values || _quizzy.currentQuestion.value.choices;
             for(var i = 0; i < values.length; i++){
                 if(type == 'radio'){
                     inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
@@ -155,12 +151,8 @@ var quizzy = (function(){
         _inputWrap.id = "quizzy-input-wrap";
 
         _buttons = {};
-        _buttons.next = document.createElement("button");
-        _buttons.next.id = "quizzy-next";
-        _buttons.next.innerHTML = "NEXT";
-        _buttons.prev = document.createElement("button");
-        _buttons.prev.id = "quizzy-prev"
-        _buttons.prev.innerHTML = "BACK";
+        _buttons.next = _quizzy.createButton("NEXT","quizzy-next");
+        _buttons.prev = _quizzy.createButton("BACK","quizzy-prev");
         addEvent('click',_buttons.next,_quizzy.checkAnswer);
         addEvent('click',_buttons.prev,_quizzy.prevQuestion);
 
@@ -172,8 +164,16 @@ var quizzy = (function(){
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     
+    _quizzy.createButton = function(text,id,clss){
+        var btn = document.createElement("button");
+        btn.id = id || "";
+        btn.innerHTML = text || "";
+        btn.class = clss || "";
+        return btn;
+    }
+    
     _quizzy.getNextQuestion = function(){
-        return _currentQuestion.next;
+        return _quizzy.currentQuestion.next;
     }
     _quizzy.jumpToQuestion = function(n){
 
@@ -182,15 +182,15 @@ var quizzy = (function(){
 
     }
     _quizzy.nextQuestion = function(){
-        _currentQuestion = _quizzy.getNextQuestion();
-        if(!_currentQuestion) {
+        _quizzy.currentQuestion = _quizzy.getNextQuestion();
+        if(!_quizzy.currentQuestion) {
             _quizzy.end();
         }else{
             _quizzy.updateQuizInterface();
         }
     }
     _quizzy.prevQuestion = function(){
-        _currentQuestion = _currentQuestion.prev;
+        _quizzy.currentQuestion = _quizzy.currentQuestion.prev;
         _quizzy.updateQuizInterface();
     }
     
@@ -203,8 +203,8 @@ var quizzy = (function(){
             }
         }
         if(choice){
-            if(choice == _currentQuestion.value.answer) {
-                _score += _currentQuestion.value.score;
+            if(choice == _quizzy.currentQuestion.value.answer) {
+                _score += _quizzy.currentQuestion.value.score;
             }
             _quizzy.nextQuestion();
         }else{
