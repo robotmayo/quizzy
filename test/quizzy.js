@@ -73,18 +73,18 @@ var quizzy = (function(){
         type = type.toLowerCase();
         var inputs = [];
         if(!isNaN(values)){
-            for(var i = 0; i <= values; i++){
-                if(type=='radio'){
-                    inputs.push(_quizzy.createRadioButton('quizzy-radio');
+            for(var i = 0; i < values; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio'));
                 }
             }
         }else{
             values = values || _currentQuestion.value.choices;
             for(var i = 0; i < values.length; i++){
-                if(type=='radio'){
+                if(type == 'radio'){
                     inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
                 }
-            }  
+            }
         }
         
         return inputs;
