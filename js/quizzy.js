@@ -63,10 +63,12 @@ var quizzy = (function(){
         this.type = q.type || quizzyConstants.STRING_RADIO;
         this.userChoice = null;
     }
+    /*
+    * The starting point for quizzy.
+    * @param settings : A plain JavaScript object containing the settings to use.
+    * @return none
+    */
     _quizzy.init = function(settings){
-        // Duplicates the questions into this internal array
-        // Array.slice
-        // Array.slice everywhere
         if(settings) {
             mergeSettings(settings);
         }else{_quizzy.settings = _defaultSettings;}
@@ -81,6 +83,10 @@ var quizzy = (function(){
         _quizzy.createQuizInterface();
         _quizzy.start();
     }
+    /*
+    * Fetches the questions then makes a copy for internal use. Turns the questions into QuizzyQuestion objects first.
+    * @return none
+    */
     _quizzy.setUpQuestions = function(){
         var temp = questions.slice();
         _questions = [];
@@ -93,10 +99,19 @@ var quizzy = (function(){
         _questions = new LinkedList();
         _questions.arrayToList(_quizzy.questions.slice());
     }
+    /*
+    * Fetches the first question and updates the interface. A starting point for the quiz. 
+    * NOT A STARTING POINT FOR QUIZZY ITSELF!
+    * @return none
+    */
     _quizzy.start = function(){
         _quizzy.currentQuestion = _questions.getFirst();
         _quizzy.updateQuizInterface();
     }
+    /*
+    * Updates the quiz interface with information from the current question. Currently a bit inneficient and rigid.
+    * @return none
+    */
     _quizzy.updateQuizInterface = function(){
         var inputs;
         var i;
@@ -120,12 +135,22 @@ var quizzy = (function(){
         frag = inputs = null;
         
     }
+    /*
+    * Wraps the given input in a label.
+    * @return element
+    */
     _quizzy.wrapInLabel = function(input,value){
         var label = document.createElement('label');
         label.appendChild(input);
         label.innerHTML += value || input.value;
         return label;
     }
+    /*
+    * Creates an input of the given type.
+    * @param type The type of input. [expects String]
+    * @param values OPTIONAL The number of inputs to create or an array of data to map to the value of inputs [expects Number || Array]
+    * @return Array Array of the inputs
+    */
     _quizzy.createInput = function(type,values){
         type = type || 'radio';
         type = type.toLowerCase();
