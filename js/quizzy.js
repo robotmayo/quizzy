@@ -59,7 +59,7 @@ var quizzy = (function(){
         this.question = q.question;
         this.answer = q.choices[q.answer] || null;
         this.choices = q.choices;
-        this.score = q.score || quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
+        this.score = q.score || _quizzy.NUMBER_DEFAULT_SCORE_PER_QUESTION;
         this.type = q.type || quizzyConstants.STRING_RADIO;
         this.userChoice = null;
     }
@@ -67,7 +67,21 @@ var quizzy = (function(){
         // Duplicates the questions into this internal array
         // Array.slice
         // Array.slice everywhere
-        if(settings) mergeSettings(settings);
+        if(settings) {
+            mergeSettings(settings);
+        }else{_quizzy.settings = _defaultSettings;}
+        _quizzy.setUpQuestions();
+        
+        _quizContainer = document.getElementById("quizzy");
+        if(_quizContainer == null){
+            throw new Error("Couldn't find quizzy starting element. Aborting mission!");
+        }
+        _score = 0;
+        _quizzy.questionCount = _questions.size();
+        _quizzy.createQuizInterface();
+        _quizzy.start();
+    }
+    _quizzy.setUpQuestions = function(){
         var temp = questions.slice();
         _questions = [];
         for(var i = 0; i < temp.length;i++){
@@ -78,14 +92,6 @@ var quizzy = (function(){
         quizzyUtils.shuffleArray(_questions);
         _questions = new LinkedList();
         _questions.arrayToList(_quizzy.questions.slice());
-        _quizContainer = document.getElementById("quizzy");
-        if(_quizContainer == null){
-            throw new Error("Couldn't find quizzy starting element. Aborting mission!");
-        }
-        _score = 0;
-        _quizzy.questionCount = _questions.size();
-        _quizzy.createQuizInterface();
-        _quizzy.start();
     }
     _quizzy.start = function(){
         _quizzy.currentQuestion = _questions.getFirst();
