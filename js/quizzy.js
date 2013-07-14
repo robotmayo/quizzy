@@ -38,6 +38,7 @@ var quizzy = (function(){
     // Data
     var _questions;
     var _score;
+    var _defaultSettings;
 
     // Display
     var _quizContainer;
@@ -48,6 +49,7 @@ var quizzy = (function(){
 
     _quizzy.currentQuestion;
     _quizzy.questions;
+    _quizzy.settings;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -57,10 +59,11 @@ var quizzy = (function(){
         this.type = q.type || quizzyConstants.STRING_RADIO;
         this.userChoice = null;
     }
-    _quizzy.init = function(){
+    _quizzy.init = function(settings){
         // Duplicates the questions into this internal array
         // Array.slice
         // Array.slice everywhere
+        if(settings) mergeSettings(settings);
         var temp = questions.slice();
         _questions = [];
         for(var i = 0; i < temp.length;i++){
@@ -238,6 +241,13 @@ var quizzy = (function(){
         }else{
             throw new Error("The supplied object does not support either event methods.");
         }
+    }
+
+    function mergeSettings(settings){
+        var holderObj = {};
+        for(var name in _defaultSettings) {holderObj[name] = _defaultSettings[name];}
+        for(var name in settings){holderObj[name] = settings[name];}
+        _quizzy.settings = holderObj;
     }
 
     
