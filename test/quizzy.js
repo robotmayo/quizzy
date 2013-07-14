@@ -61,7 +61,7 @@ var quizzy = (function(){
         var frag = document.createDocumentFragment();
         var child = _inputWrap.firstChild;
         var removeNode;
-        while(child.nextSibling){
+        while(child){
             removeNode = null;
             if(child.tagName == 'LABEL' || child.tagName == 'INPUT'){
                 removeNode = child;
