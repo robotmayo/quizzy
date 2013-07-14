@@ -174,18 +174,26 @@ var quizzy = (function(){
     }
     /*
     * Creates a radio button
-    * [name] Name of the button [expects String || Number]
-    * [value] Value of the button [expects String || Number]
-    * [id] Id of the button [expects String || Number]
-    * [class] Button classes [expects String || Number || Array]
+    * @param [name] Name of the button [expects String || Number]
+    * @param [value] Value of the button [expects String || Number]
+    * @param [id] Id of the button [expects String || Number]
+    * @param [class] Button classes [expects String || Number || Array]
     * @return element Radio button element
     */
-    _quizzy.createRadioButton = function(name,value,id){
+    _quizzy.createRadioButton = function(name,value,id,classes){
         var radioBtn = document.createElement('input');
         radioBtn.type = 'radio';
-        radioBtn.name = name;
+        radioBtn.name = name || '';
         radioBtn.value = value || '';
         radioBtn.id = id || '';
+        if(classes instanceof  Array){
+            var d = " ";
+            for(var i = 0; i < classes.length; i++){
+                d += classes[i]+" ";
+            }
+            classes = d;
+        }
+        radioBtn.className = d;
         return radioBtn;
     }
     _quizzy.createQuizInterface = function(){
