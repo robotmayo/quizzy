@@ -43,12 +43,18 @@ var quizzy = (function(){
         this.choices = q.choices;
         this.score = q.score || quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
         this.type = q.type || quizzyConstants.STRING_RADIO;
+        this.userChoice = null;
     }
     _quizzy.init = function(){
         // Duplicates the questions into this internal array
         // Array.slice
         // Array.slice everywhere
-        _questions = testQuestions.slice();
+        var temp = testQuestions.slice();
+        _questions = [];
+        for(var i = 0; i < temp.length;i++){
+            _questions.push(new QuizzyQuestion(temp[i]));
+        }
+        temp = null;
         _quizzy.questions = _questions.slice();
         quizzyUtils.shuffleArray(_questions);
         _questions = new LinkedList();
