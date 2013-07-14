@@ -37,7 +37,7 @@ var quizzy = (function(){
         // Duplicates the questions into this internal array
         // Array.slice
         // Array.slice everywhere
-        _questions = questions.slice();
+        _questions = testQuestions.slice();
         _quizzy.questions = _questions.slice();
         quizzyUtils.shuffleArray(_questions);
         _questions = new LinkedList();
@@ -56,18 +56,37 @@ var quizzy = (function(){
         _quizzy.updateQuizInterface();
     }
     _quizzy.updateQuizInterface = function(){
-
+        var inputs = [];
+        var child = _inputWrap.firstChild;
+        while(child.nextSibling){
+            if(child.tagName == 'INPUT'){
+                inputs.push(child);
+            }
+        }
+        if(inputs.length < _currentQuestion.value.choices.length){
+            inputs.concat(_quizzy.createInput('radio',_currentQuestion.value.choices.length-inputs.length));
+        }
+        
     }
     _quizzy.createInput = function(type,values){
         type = type || 'radio';
         type = type.toLowerCase();
-        values = values || _currentQuestion.value.choices;
         var inputs = [];
-        for(var i = 0; i <= values.length; i++){
-            if(type=='radio'){
-                inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
+        if(!isNaN(values)){
+            for(var i = 0; i <= values; i++){
+                if(type=='radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio');
+                }
             }
+        }else{
+            values = values || _currentQuestion.value.choices;
+            for(var i = 0; i < values.length; i++){
+                if(type=='radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
+                }
+            }  
         }
+        
         return inputs;
     }
     _quizzy.createRadioButton = function(name,value,id){
