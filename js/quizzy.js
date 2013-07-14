@@ -148,7 +148,8 @@ var quizzy = (function(){
     /*
     * Creates an input of the given type.
     * @param type The type of input. [expects String]
-    * @param values OPTIONAL The number of inputs to create or an array of data to map to the value of inputs [expects Number || Array]
+    * @param [values] The number of inputs to create or an array of data to map to the value of inputs
+    * If no value or type is supplied it will return one radio button. [expects Number || Array]
     * @return Array Array of the inputs
     */
     _quizzy.createInput = function(type,values){
@@ -161,14 +162,13 @@ var quizzy = (function(){
                     inputs.push(_quizzy.createRadioButton('quizzy-radio'));
                 }
             }
-        }else{
-            values = values || _quizzy.currentQuestion.value.choices;
+        }else if(values){
             for(var i = 0; i < values.length; i++){
                 if(type == 'radio'){
                     inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
                 }
             }
-        }
+        }else{inputs.push(_quizzy.createRadioButton('quizzy-radio'))}
         
         return inputs;
     }
