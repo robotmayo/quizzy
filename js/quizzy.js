@@ -158,7 +158,11 @@ var quizzy = (function(){
         _buttons.next = document.createElement("button");
         _buttons.next.id = "quizzy-next";
         _buttons.next.innerHTML = "NEXT";
+        _buttons.prev = document.createElement("button");
+        _buttons.prev.id = "quizzy-prev"
+        _buttons.prev.innerHTML = "BACK";
         addEvent('click',_buttons.next,_quizzy.checkAnswer);
+        addEvent('click',_buttons.prev,_quizzy.prevQuestion);
 
         _frag.appendChild(_title);
         _frag.appendChild(_inputWrap);
@@ -184,6 +188,10 @@ var quizzy = (function(){
         }else{
             _quizzy.updateQuizInterface();
         }
+    }
+    _quizzy.prevQuestion = function(){
+        _currentQuestion = _currentQuestion.prev;
+        _quizzy.updateQuizInterface();
     }
     
     _quizzy.checkAnswer = function(){
