@@ -55,7 +55,7 @@ var quizzy = (function(){
 
     QuizzyQuestion = function(q){
         this.question = q.question;
-        this.answer = q.answer || null;
+        this.answer = q.choices[q.answer] || null;
         this.choices = q.choices;
         this.score = q.score || quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
         this.type = q.type || quizzyConstants.STRING_RADIO;
