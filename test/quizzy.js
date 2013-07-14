@@ -56,17 +56,32 @@ var quizzy = (function(){
         _quizzy.updateQuizInterface();
     }
     _quizzy.updateQuizInterface = function(){
-        var inputs = [];
+        var inputs;
+        var i;
+        var frag = document.createDocumentFragment();
         var child = _inputWrap.firstChild;
+        var removeNode;
         while(child.nextSibling){
-            if(child.tagName == 'INPUT'){
-                inputs.push(child);
+            removeNode = null;
+            if(child.tagName == 'LABEL' || child.tagName == 'INPUT'){
+                removeNode = child;
             }
+            child = child.nextSibling;
+            if(removeNode) removeNode.parentNode.removeChild(removeNode);
         }
-        if(inputs.length < _currentQuestion.value.choices.length){
-            inputs.concat(_quizzy.createInput('radio',_currentQuestion.value.choices.length-inputs.length));
+        inputs = _quizzy.createInput('radio',_currentQuestion.value.choices);
+        for(i = 0; i < inputs.length; i++){
+            frag.appendChild(_quizzy.wrapInLabel(inputs[i]));
         }
+        _inputWrap.appendChild(frag);
+        frag = inputs = null;
         
+    }
+    _quizzy.wrapInLabel = function(input,value){
+        var label = document.createElement('label');
+        label.innerHTML = value || input.value;
+        label.appendChild(input);
+        return label;
     }
     _quizzy.createInput = function(type,values){
         type = type || 'radio';
