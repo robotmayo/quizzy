@@ -15,6 +15,9 @@ quizzyUtils.shuffleArray = function(array){
 }
 var quizzy = (function(){
     var _quizzy = {};
+    var quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
+    quizzyConstants.STRING_RADIO = "radio";
+    quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION = 1;
 
     // Data
     var _questions;
@@ -33,6 +36,14 @@ var quizzy = (function(){
     _quizzy.currentQuestion;
     _quizzy.questionCount;
     _quizzy.questions;
+
+    QuizzyQuestion = function(q){
+        this.question = q.question;
+        this.answer = q.answer || null;
+        this.choices = q.choices;
+        this.score = q.score || quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
+        this.type = q.type || quizzyConstants.STRING_RADIO;
+    }
     _quizzy.init = function(){
         // Duplicates the questions into this internal array
         // Array.slice
