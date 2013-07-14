@@ -14,15 +14,33 @@ quizzyUtils.shuffleArray = function(array){
     }
 }
 
+var quizzyUtils = {};
+quizzyUtils.getRandom = function(min,max){
+    return min + Math.floor(Math.random() * (max - min + 1));
+}
+// Shuffle array in place
+quizzyUtils.shuffleArray = function(array){
+    var swap;
+    var store;
+    for(var i = array.length-1; i >= 0; i--){
+        store = this.getRandom(0,i);
+        swap = array[i];
+        array[i] = array[store];
+        array[store] = swap;
+    }
+}
 var quizzy = (function(){
     var _quizzy = {};
+    var quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
+    quizzyConstants.STRING_RADIO = "radio";
+    quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION = 1;
 
     // Data
     var _questions;
     var _tQuestions;
     var _answer; // Not the actual answer but rather the index of the answer.
     var _score;
-    var _currentQuestion;
+    var _currentQuestion; // Refers to the node of the question not the question data itself.
 
     // Display
     var _quizContainer;
@@ -34,24 +52,100 @@ var quizzy = (function(){
     _quizzy.currentQuestion;
     _quizzy.questionCount;
     _quizzy.questions;
+
+    QuizzyQuestion = function(q){
+        this.question = q.question;
+        this.answer = q.answer || null;
+        this.choices = q.choices;
+        this.score = q.score || quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
+        this.type = q.type || quizzyConstants.STRING_RADIO;
+        this.userChoice = null;
+    }
     _quizzy.init = function(){
         // Duplicates the questions into this internal array
-        _questions = questions.slice();
+        // Array.slice
+        // Array.slice everywhere
+        var temp = questions.slice();
+        _questions = [];
+        for(var i = 0; i < temp.length;i++){
+            _questions.push(new QuizzyQuestion(temp[i]));
+        }
+        temp = null;
+        _quizzy.questions = _questions.slice();
         quizzyUtils.shuffleArray(_questions);
-        _quizzy.questions = _questions;
-        _tQuestions = new LinkedList();
-        _tQuestions.arrayToList(_questions);
-        _currentQuestion = _tQuestions.getFirst();
+        _questions = new LinkedList();
+        _questions.arrayToList(_quizzy.questions.slice());
         _quizContainer = document.getElementById("quizzy");
         if(_quizContainer == null){
             throw new Error("Couldn't find quizzy starting element. Aborting mission!");
         }
         _score = 0;
-        _quizzy.questionCount = 0;
-        _quizzy.setupElements();
-        _quizzy.nextQuestion();
+        _quizzy.questionCount = _questions.size();
+        _quizzy.createQuizInterface();
+        _quizzy.start();
     }
-    _quizzy.setupElements = function(){
+    _quizzy.start = function(){
+        _currentQuestion = _questions.getFirst();
+        _quizzy.updateQuizInterface();
+    }
+    _quizzy.updateQuizInterface = function(){
+        var inputs;
+        var i;
+        var frag = document.createDocumentFragment();
+        var child = _inputWrap.firstChild;
+        var removeNode;
+        while(child){
+            removeNode = null;
+            if(child.tagName == 'LABEL' || child.tagName == 'INPUT'){
+                removeNode = child;
+            }
+            child = child.nextSibling;
+            if(removeNode) removeNode.parentNode.removeChild(removeNode);
+        }
+        inputs = _quizzy.createInput('radio',_currentQuestion.value.choices);
+        for(i = 0; i < inputs.length; i++){
+            frag.appendChild(_quizzy.wrapInLabel(inputs[i]));
+        }
+        _inputWrap.appendChild(frag);
+        frag = inputs = null;
+        
+    }
+    _quizzy.wrapInLabel = function(input,value){
+        var label = document.createElement('label');
+        label.appendChild(input);
+        label.innerHTML += value || input.value;
+        return label;
+    }
+    _quizzy.createInput = function(type,values){
+        type = type || 'radio';
+        type = type.toLowerCase();
+        var inputs = [];
+        if(!isNaN(values)){
+            for(var i = 0; i < values; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio'));
+                }
+            }
+        }else{
+            values = values || _currentQuestion.value.choices;
+            for(var i = 0; i < values.length; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
+                }
+            }
+        }
+        
+        return inputs;
+    }
+    _quizzy.createRadioButton = function(name,value,id){
+        var radioBtn = document.createElement('input');
+        radioBtn.type = 'radio';
+        radioBtn.name = name;
+        radioBtn.value = value || '';
+        radioBtn.id = id || '';
+        return radioBtn;
+    }
+    _quizzy.createQuizInterface = function(){
         _frag = document.createDocumentFragment();
         _title = document.createElement('h2');
         _title.id = "quizzy-title";

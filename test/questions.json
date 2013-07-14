@@ -1,4 +1,4 @@
-var testQuestions = [
+var questions = [
 {question: "What is 150 * 0?",
 choices : ["0","-150","150","42"],
 answer : 0
