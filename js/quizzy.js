@@ -172,6 +172,14 @@ var quizzy = (function(){
         
         return inputs;
     }
+    /*
+    * Creates a radio button
+    * [name] Name of the button [expects String || Number]
+    * [value] Value of the button [expects String || Number]
+    * [id] Id of the button [expects String || Number]
+    * [class] Button classes [expects String || Number || Array]
+    * @return element Radio button element
+    */
     _quizzy.createRadioButton = function(name,value,id){
         var radioBtn = document.createElement('input');
         radioBtn.type = 'radio';
