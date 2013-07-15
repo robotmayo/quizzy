@@ -1,36 +1,6 @@
 /*! quizzy - v0.0.5 - 2013-07-15
 * Copyright (c) 2013 ; Licensed  */
-var quizzyUtils = {};
-quizzyUtils.getRandom = function(min,max){
-    return min + Math.floor(Math.random() * (max - min + 1));
-}
-// Shuffle array in place
-quizzyUtils.shuffleArray = function(array){
-    var swap;
-    var store;
-    for(var i = array.length-1; i >= 0; i--){
-        store = this.getRandom(0,i);
-        swap = array[i];
-        array[i] = array[store];
-        array[store] = swap;
-    }
-}
 
-var quizzyUtils = {};
-quizzyUtils.getRandom = function(min,max){
-    return min + Math.floor(Math.random() * (max - min + 1));
-}
-// Shuffle array in place
-quizzyUtils.shuffleArray = function(array){
-    var swap;
-    var store;
-    for(var i = array.length-1; i >= 0; i--){
-        store = this.getRandom(0,i);
-        swap = array[i];
-        array[i] = array[store];
-        array[store] = swap;
-    }
-}
 var quizzy = (function(){
     var _quizzy = {};
     var quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
@@ -40,10 +10,11 @@ var quizzy = (function(){
     // Data
     var _questions;
     var _score;
-    var _defaultSettings = {
+    var _defaultConfig = {
         allowBackTrack : false,
         showHistory : false,
-        backDistance : 0
+        backDistance : 0,
+        shuffle : false
     }
 
     // Display
@@ -55,7 +26,7 @@ var quizzy = (function(){
 
     _quizzy.currentQuestion;
     _quizzy.questions;
-    _quizzy.settings;
+    _quizzy.config;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -67,13 +38,13 @@ var quizzy = (function(){
     }
     /*
     * The starting point for quizzy.
-    * @param settings : A plain JavaScript object containing the settings to use.
+    * @param config : A plain JavaScript object containing the config to use.
     * @return none
     */
-    _quizzy.init = function(settings){
-        if(settings) {
-            mergeSettings(settings);
-        }else{_quizzy.settings = _defaultSettings;}
+    _quizzy.init = function(config){
+        if(config) {
+            mergeConfigs(config);
+        }else{_quizzy.config = _defaultConfig;}
         _quizzy.setUpQuestions();
         
         _quizContainer = document.getElementById("quizzy");
@@ -89,17 +60,18 @@ var quizzy = (function(){
     * Fetches the questions then makes a copy for internal use. Turns the questions into QuizzyQuestion objects first.
     * @return none
     */
-    _quizzy.setUpQuestions = function(){
-        var temp = questions.slice();
-        _questions = [];
+    _quizzy.setUpQuestions = function(test){
+        var temp = QuizzyQuestions.slice();
+        if(test)temp=test.slice();
+        _quizzy.questions = [];
         for(var i = 0; i < temp.length;i++){
-            _questions.push(new QuizzyQuestion(temp[i]));
+            _quizzy.questions.push(new QuizzyQuestion(temp[i]));
         }
         temp = null;
-        _quizzy.questions = _questions.slice();
+        _questions = _quizzy.questions.slice();
         quizzyUtils.shuffleArray(_questions);
-        _questions = new QuizzyList();
-        _questions.arrayToList(_quizzy.questions.slice());
+        _questions = new QuizzyList(_questions);
+        //_questions.arrayToList(_quizzy.questions.slice());
     }
     /*
     * Fetches the first question and updates the interface. A starting point for the quiz. 
@@ -356,18 +328,33 @@ var quizzy = (function(){
         }
     }
     /*
-    * Merge the user and default settings
+    * Merge the user and default configurations
     */
-    function mergeSettings(settings){
+    function mergeConfigs(config){
         var holderObj = {};
-        for(var name in _defaultSettings) {holderObj[name] = _defaultSettings[name];}
-        for(var name in settings){holderObj[name] = settings[name];}
-        _quizzy.settings = holderObj;
+        for(var name in _defaultConfig) {holderObj[name] = _defaultConfig[name];}
+        for(var name in config){holderObj[name] = config[name];}
+        _quizzy.config = holderObj;
     }
 
     
     return _quizzy;
-}());;var QuizzyList = function(){
+}());
+var quizzyUtils = {};
+quizzyUtils.getRandom = function(min,max){
+    return min + Math.floor(Math.random() * (max - min + 1));
+}
+// Shuffle array in place
+quizzyUtils.shuffleArray = function(array){
+    var swap;
+    var store;
+    for(var i = array.length-1; i >= 0; i--){
+        store = this.getRandom(0,i);
+        swap = array[i];
+        array[i] = array[store];
+        array[store] = swap;
+    }
+};var QuizzyList = function(array){
     var _ll = {};
     var _first;
     var _last;
@@ -446,6 +433,7 @@ var quizzy = (function(){
         var next = {};
         var prev = {};
     };
+    if(array){_ll.arrayToList(array);}
     return _ll;
 };// Constants
     var _hours = 1000 * 60 * 60;
