@@ -11,7 +11,8 @@ var quizzy = (function(){
     var _defaultSettings = {
         allowBackTrack : false,
         showHistory : false,
-        backDistance : 0
+        backDistance : 0,
+        shuffle : false
     }
 
     // Display
@@ -57,17 +58,18 @@ var quizzy = (function(){
     * Fetches the questions then makes a copy for internal use. Turns the questions into QuizzyQuestion objects first.
     * @return none
     */
-    _quizzy.setUpQuestions = function(){
+    _quizzy.setUpQuestions = function(test){
         var temp = questions.slice();
-        _questions = [];
+        if(test)temp=test.slice();
+        _quizzy.questions = [];
         for(var i = 0; i < temp.length;i++){
-            _questions.push(new QuizzyQuestion(temp[i]));
+            _quizzy.questions.push(new QuizzyQuestion(temp[i]));
         }
         temp = null;
-        _quizzy.questions = _questions.slice();
+        _questions = _quizzy.questions.slice();
         quizzyUtils.shuffleArray(_questions);
-        _questions = new QuizzyList();
-        _questions.arrayToList(_quizzy.questions.slice());
+        _questions = new QuizzyList(_questions);
+        //_questions.arrayToList(_quizzy.questions.slice());
     }
     /*
     * Fetches the first question and updates the interface. A starting point for the quiz. 
