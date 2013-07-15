@@ -1,4 +1,4 @@
-var QuizzyList = function(){
+var QuizzyList = function(array){
     var _ll = {};
     var _first;
     var _last;
@@ -77,5 +77,6 @@ var QuizzyList = function(){
         var next = {};
         var prev = {};
     };
+    if(array){_ll.arrayToList(array);}
     return _ll;
 }
