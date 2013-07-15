@@ -96,7 +96,7 @@ var quizzy = (function(){
         temp = null;
         _quizzy.questions = _questions.slice();
         quizzyUtils.shuffleArray(_questions);
-        _questions = new LinkedList();
+        _questions = new QuizzyList();
         _questions.arrayToList(_quizzy.questions.slice());
     }
     /*
