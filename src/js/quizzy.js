@@ -59,7 +59,7 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.setUpQuestions = function(test){
-        var temp = questions.slice();
+        var temp = QuizzyQuestions.slice();
         if(test)temp=test.slice();
         _quizzy.questions = [];
         for(var i = 0; i < temp.length;i++){
