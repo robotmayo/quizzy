@@ -1,0 +1,41 @@
+{
+  "name": "quizzy",
+  "version": "0.0.5",
+  "description": "A simple and customizable JavaScript quiz.",
+  "keywords": [
+    "javascript",
+    "quiz",
+    "framework"
+  ],
+  "author": [
+    {
+      "name": "robotmayo"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "robotmayo",
+      "web": "http://www.reddit.com/user/robotmayo/"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/robotmayo/quizzy"
+    }
+  ],
+  "scripts": {
+    "test": "test/test.js"
+  },
+  "directories": {
+    "js": "js",
+    "css": "css",
+    "img": "img"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-concat": "~0.3.0"
+  }
+}
