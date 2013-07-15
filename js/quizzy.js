@@ -177,7 +177,7 @@ var quizzy = (function(){
     * @param [name] Name of the button [expects String || Number]
     * @param [value] Value of the button [expects String || Number]
     * @param [id] Id of the button [expects String || Number]
-    * @param [class] Button classes [expects String || Number || Array]
+    * @param [classes] Button classes [expects String || Number || Array]
     * @return element Radio button element
     */
     _quizzy.createRadioButton = function(name,value,id,classes){
@@ -196,6 +196,11 @@ var quizzy = (function(){
         radioBtn.className = d;
         return radioBtn;
     }
+
+    /*
+    * Creates the main quiz interface
+    * @return none
+    */
     _quizzy.createQuizInterface = function(){
         _frag = document.createDocumentFragment();
         _title = document.createElement('h2');
@@ -217,24 +222,53 @@ var quizzy = (function(){
         
         while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
-    
-    _quizzy.createButton = function(text,id,clss){
+    /*
+    * Creates a button
+    * @param [text] The text to appear on the button
+    * @param [id] The buttons id
+    * @param [classname] Button classes [expects String || Number || Array]
+    * @return element The button element created
+    */
+    _quizzy.createButton = function(text,id,classes){
         var btn = document.createElement("button");
         btn.id = id || "";
         btn.innerHTML = text || "";
-        btn.class = clss || "";
+        if(classes instanceof  Array){
+            var d = " ";
+            for(var i = 0; i < classes.length; i++){
+                d += classes[i]+" ";
+            }
+            classes = d;
+        }
+        btn.className = classes || "";
         return btn;
     }
     
+    /*
+    * Returns the node of the next question
+    * @return node
+    */
     _quizzy.getNextQuestion = function(){
         return _quizzy.currentQuestion.next;
     }
-    _quizzy.jumpToQuestion = function(n){
+    /*
+    * Jumps to the given question. Nothing happens if the question isn't found.
+    * @param index The question to jump to
+    */
+    _quizzy.jumpToQuestion = function(index){
 
     }
+    /*
+    * Returns the node of the previous question
+    * @return node
+    */
     _quizzy.prevQuestion = function(){
 
     }
+    /*
+    * Sets the current question to the next question and updates the interface. If there is none the end method is called.
+    * @return none
+    */
     _quizzy.nextQuestion = function(){
         _quizzy.currentQuestion = _quizzy.getNextQuestion();
         if(!_quizzy.currentQuestion) {
@@ -243,11 +277,21 @@ var quizzy = (function(){
             _quizzy.updateQuizInterface();
         }
     }
+    /*
+    * Sets the current question to the previous one and updates the interface. 
+    * If there is none or going back is dissallowed the method does nothing.
+    * @return none
+    */
     _quizzy.prevQuestion = function(){
         _quizzy.currentQuestion = _quizzy.currentQuestion.prev;
         _quizzy.updateQuizInterface();
     }
-    
+    /*
+    * Checks the answer.
+    * True if answer is correct
+    * False if answer is correct or there is no selection
+    * @return boolean 
+    */
     _quizzy.checkAnswer = function(){
         var choice;
         var inputs = _inputWrap.getElementsByTagName("input");
@@ -265,12 +309,22 @@ var quizzy = (function(){
             alert("You didn't input anything!");
         }
     }
+    /*
+    * Calculates and returns the score
+    * @return number
+    */
     _quizzy.calculateScore = function(){
         return _score;
     }
+    /*
+    * Returns the raw score.
+    */
     _quizzy.getRawScore = function(){
         return _score;
     }
+    /*
+    * Ends the quiz, displaying a message and score if allowed.
+    */
     _quizzy.end = function(){
         _title.remove();
         var child = _inputWrap.firstChild;
@@ -283,7 +337,13 @@ var quizzy = (function(){
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizContainer.insertBefore(congratsMsg,_quizContainer.firstChild);
     }
-
+    /*
+    * Wrapper function for adding events
+    * evt The event to listen for [expects String]
+    * obj The object to add the event to [expects Object]
+    * handler The event handler [expects Function]
+    * @return none
+    */
     function addEvent(evt,obj,handler){
         if(obj.addEventListener){
             obj.addEventListener(evt,handler,false);
@@ -293,7 +353,9 @@ var quizzy = (function(){
             throw new Error("The supplied object does not support either event methods.");
         }
     }
-
+    /*
+    * Merge the user and default settings
+    */
     function mergeSettings(settings){
         var holderObj = {};
         for(var name in _defaultSettings) {holderObj[name] = _defaultSettings[name];}
