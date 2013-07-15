@@ -1,4 +1,4 @@
-var LinkedList = function(){
+var QuizzyList = function(){
     var _ll = {};
     var _first;
     var _last;
