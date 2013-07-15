@@ -8,7 +8,7 @@ var quizzy = (function(){
     // Data
     var _questions;
     var _score;
-    var _defaultSettings = {
+    var _defaultConfig = {
         allowBackTrack : false,
         showHistory : false,
         backDistance : 0,
@@ -24,7 +24,7 @@ var quizzy = (function(){
 
     _quizzy.currentQuestion;
     _quizzy.questions;
-    _quizzy.settings;
+    _quizzy.config;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -36,13 +36,13 @@ var quizzy = (function(){
     }
     /*
     * The starting point for quizzy.
-    * @param settings : A plain JavaScript object containing the settings to use.
+    * @param config : A plain JavaScript object containing the config to use.
     * @return none
     */
-    _quizzy.init = function(settings){
-        if(settings) {
-            mergeSettings(settings);
-        }else{_quizzy.settings = _defaultSettings;}
+    _quizzy.init = function(config){
+        if(config) {
+            mergeConfigs(config);
+        }else{_quizzy.config = _defaultConfig;}
         _quizzy.setUpQuestions();
         
         _quizContainer = document.getElementById("quizzy");
@@ -326,13 +326,13 @@ var quizzy = (function(){
         }
     }
     /*
-    * Merge the user and default settings
+    * Merge the user and default configurations
     */
-    function mergeSettings(settings){
+    function mergeConfigs(config){
         var holderObj = {};
-        for(var name in _defaultSettings) {holderObj[name] = _defaultSettings[name];}
-        for(var name in settings){holderObj[name] = settings[name];}
-        _quizzy.settings = holderObj;
+        for(var name in _defaultConfig) {holderObj[name] = _defaultConfig[name];}
+        for(var name in config){holderObj[name] = config[name];}
+        _quizzy.config = holderObj;
     }
 
     
