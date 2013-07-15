@@ -18,8 +18,8 @@ module.exports = function(grunt) {
         separator: ';',
       },
       dist: {
-        src: ['js/quizzy.js','js/linkedlist.js','js/timer.js'],
-        dest: 'dist/quizzy.js'
+        src: ['src/js/quizzy.js','src/js/linkedlist.js','src/js/timer.js'],
+        dest: 'quizzy/quizzy.js'
       }
     },
     uglify: {
@@ -28,7 +28,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: '<%= concat.dist.dest %>',
-        dest: 'dist/quizzy.min.js'
+        dest: 'quizzy/quizzy.min.js'
       }
     },
     jshint: {

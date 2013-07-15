@@ -28,9 +28,9 @@
     "test": "test/test.js"
   },
   "directories": {
-    "js": "js",
-    "css": "css",
-    "img": "img"
+    "src/js": "js",
+    "src/css": "css",
+    "src/img": "img"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
