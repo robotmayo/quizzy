@@ -1,34 +1,4 @@
-var quizzyUtils = {};
-quizzyUtils.getRandom = function(min,max){
-    return min + Math.floor(Math.random() * (max - min + 1));
-}
-// Shuffle array in place
-quizzyUtils.shuffleArray = function(array){
-    var swap;
-    var store;
-    for(var i = array.length-1; i >= 0; i--){
-        store = this.getRandom(0,i);
-        swap = array[i];
-        array[i] = array[store];
-        array[store] = swap;
-    }
-}
 
-var quizzyUtils = {};
-quizzyUtils.getRandom = function(min,max){
-    return min + Math.floor(Math.random() * (max - min + 1));
-}
-// Shuffle array in place
-quizzyUtils.shuffleArray = function(array){
-    var swap;
-    var store;
-    for(var i = array.length-1; i >= 0; i--){
-        store = this.getRandom(0,i);
-        swap = array[i];
-        array[i] = array[store];
-        array[store] = swap;
-    }
-}
 var quizzy = (function(){
     var _quizzy = {};
     var quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
@@ -366,3 +336,18 @@ var quizzy = (function(){
     
     return _quizzy;
 }());
+var quizzyUtils = {};
+quizzyUtils.getRandom = function(min,max){
+    return min + Math.floor(Math.random() * (max - min + 1));
+}
+// Shuffle array in place
+quizzyUtils.shuffleArray = function(array){
+    var swap;
+    var store;
+    for(var i = array.length-1; i >= 0; i--){
+        store = this.getRandom(0,i);
+        swap = array[i];
+        array[i] = array[store];
+        array[store] = swap;
+    }
+}
