@@ -98,7 +98,7 @@ var quizzy = (function(){
         temp = null;
         _quizzy.questions = _questions.slice();
         quizzyUtils.shuffleArray(_questions);
-        _questions = new LinkedList();
+        _questions = new QuizzyList();
         _questions.arrayToList(_quizzy.questions.slice());
     }
     /*
@@ -367,8 +367,7 @@ var quizzy = (function(){
 
     
     return _quizzy;
-}());
-var LinkedList = function(){
+}());;var QuizzyList = function(){
     var _ll = {};
     var _first;
     var _last;
@@ -448,14 +447,12 @@ var LinkedList = function(){
         var prev = {};
     };
     return _ll;
-}
-
-// Constants
+};// Constants
     var _hours = 1000 * 60 * 60;
     var _minutes = 1000 * 60;
     var _seconds = 1000;
 
-Timer = function(tick,handler,start){
+QuizzyTimer = function(tick,handler,start){
     this.handler = handler || null;
     this.tick = tick || 20;
     this.elapsed = 0;
@@ -470,7 +467,7 @@ Timer = function(tick,handler,start){
         this.start();
     }
 }
-Timer.prototype.start = function() {
+QuizzyTimer.prototype.start = function() {
     console.log(this.tick);
     this.last = Date.now();
     var self = this;
@@ -478,10 +475,10 @@ Timer.prototype.start = function() {
         self.update();
     },this.tick);
 };
-Timer.prototype.stop = function() {
+QuizzyTimer.prototype.stop = function() {
     clearInterval(this.intervalId);
 };
-Timer.prototype.update = function(){
+QuizzyTimer.prototype.update = function(){
     this.elapsed = Date.now() - this.last;
     this.clock += this.elapsed;
     this.milliseconds += elapsed;
@@ -493,7 +490,7 @@ Timer.prototype.update = function(){
     if(this.minutes > 60) this.
     this.last = Date.now();
 };
-Timer.prototype.getTime = function() {
+QuizzyTimer.prototype.getTime = function() {
     return {
         hours:this.hours,
         minutes:this.minutes,
@@ -501,7 +498,7 @@ Timer.prototype.getTime = function() {
         milliseconds:this.clock
     };
 };
-Timer.prototype.printTime = function() {
+QuizzyTimer.prototype.printTime = function() {
     var time = this.getTime();
     var hr;
     var min;
