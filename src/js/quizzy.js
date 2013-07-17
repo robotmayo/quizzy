@@ -12,7 +12,8 @@ var quizzy = (function(){
         allowBackTrack : false,
         showHistory : false,
         backDistance : 0,
-        shuffle : false
+        shuffle : false,
+        questions : null
     }
 
     // Display
@@ -44,7 +45,7 @@ var quizzy = (function(){
         if(config) {
             mergeConfigs(config);
         }else{_quizzy.config = _defaultConfig;}
-        _quizzy.setUpQuestions();
+        _quizzy.setUpQuestions(_quizzy.config.questions);
         
         _quizContainer = document.getElementById("quizzy");
         if(_quizContainer == null){
