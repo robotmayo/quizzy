@@ -57,7 +57,8 @@ var quizzy = (function(){
         _quizzy.start();
     }
     /*
-    * Fetches the questions then makes a copy for internal use. Turns the questions into QuizzyQuestion objects first.
+    * Sets up the questions into a format for internal use. Will use the param for the questions if supplied,
+    * otherwise looks for QuizzyQuestions array
     * @return none
     */
     _quizzy.setUpQuestions = function(q){
