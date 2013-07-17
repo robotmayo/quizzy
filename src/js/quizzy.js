@@ -61,8 +61,12 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.setUpQuestions = function(q){
-        var temp = QuizzyQuestions.slice();
-        if(q)temp=q.slice();
+        var temp;
+        if(q) {
+            temp = q.slice();
+        }else{
+            temp = QuizzyQuestions.slice();
+        }
         _quizzy.questions = [];
         for(var i = 0; i < temp.length;i++){
             _quizzy.questions.push(new QuizzyQuestion(temp[i]));
