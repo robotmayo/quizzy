@@ -25,6 +25,7 @@ var quizzy = (function(){
     _quizzy.currentQuestion;
     _quizzy.questions;
     _quizzy.config;
+    _quizzy.qElements;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -36,7 +37,7 @@ var quizzy = (function(){
     }
     /*
     * The starting point for quizzy.
-    * @param config : A plain JavaScript object containing the config to use.
+    * @param config : A plain JavaScript object containing the configurations to use.
     * @return none
     */
     _quizzy.init = function(config){
@@ -58,9 +59,9 @@ var quizzy = (function(){
     * Fetches the questions then makes a copy for internal use. Turns the questions into QuizzyQuestion objects first.
     * @return none
     */
-    _quizzy.setUpQuestions = function(test){
+    _quizzy.setUpQuestions = function(q){
         var temp = QuizzyQuestions.slice();
-        if(test)temp=test.slice();
+        if(q)temp=q.slice();
         _quizzy.questions = [];
         for(var i = 0; i < temp.length;i++){
             _quizzy.questions.push(new QuizzyQuestion(temp[i]));
@@ -69,7 +70,6 @@ var quizzy = (function(){
         _questions = _quizzy.questions.slice();
         quizzyUtils.shuffleArray(_questions);
         _questions = new QuizzyList(_questions);
-        //_questions.arrayToList(_quizzy.questions.slice());
     }
     /*
     * Fetches the first question and updates the interface. A starting point for the quiz. 
@@ -174,6 +174,10 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.createQuizInterface = function(){
+        _quizzy.qElements = {
+            fragment : document.createDocumentFragment(),
+            questionTitle : document.createElement('h2')
+        }
         _frag = document.createDocumentFragment();
         _title = document.createElement('h2');
         _title.id = "quizzy-title";
@@ -191,8 +195,6 @@ var quizzy = (function(){
         _frag.appendChild(_inputWrap);
         _frag.appendChild(_buttons.next);
         _quizContainer.appendChild(_frag);
-        
-        while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     /*
     * Creates a button
@@ -298,7 +300,7 @@ var quizzy = (function(){
     * Ends the quiz, displaying a message and score if allowed.
     */
     _quizzy.end = function(){
-        _title.remove();
+        _title.parentNode.removeChild(_title);
         var child = _inputWrap.firstChild;
         while(child){
             removeNode = child;
