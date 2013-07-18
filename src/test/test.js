@@ -1,4 +1,4 @@
-var ll = new LinkedList();
+var ll = new QuizzyList();
 for(var i = 0; i < 100; i++){
     ll.push(i);
 }
