@@ -1,9 +1,9 @@
 
 var quizzy = (function(){
     var _quizzy = {};
-    var quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
-    quizzyConstants.STRING_RADIO = "radio";
-    quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION = 1;
+    var _quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
+    _quizzyConstants.STRING_RADIO = "radio";
+    _quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION = 1;
 
     // Data
     var _questions;
@@ -32,8 +32,8 @@ var quizzy = (function(){
         this.question = q.question;
         this.answer = q.choices[q.answer] || null;
         this.choices = q.choices;
-        this.score = q.score || _quizzy.NUMBER_DEFAULT_SCORE_PER_QUESTION;
-        this.type = q.type || quizzyConstants.STRING_RADIO;
+        this.score = q.score || _quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
+        this.type = q.type || _quizzyConstants.STRING_RADIO;
         this.userChoice = null;
     }
     /*
