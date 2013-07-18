@@ -59,6 +59,7 @@ var quizzy = (function(){
     /*
     * Sets up the questions into a format for internal use. Will use the param for the questions if supplied,
     * otherwise looks for QuizzyQuestions array
+    * @param q : An array of objects representing the questions.
     * @return none
     */
     _quizzy.setUpQuestions = function(q){
