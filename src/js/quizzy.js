@@ -114,67 +114,7 @@ var quizzy = (function(){
         frag = inputs = null;
         
     }
-    /*
-    * Wraps the given input in a label.
-    * @return element
-    */
-    _quizzy.wrapInLabel = function(input,value){
-        var label = document.createElement('label');
-        label.appendChild(input);
-        label.innerHTML += value || input.value;
-        return label;
-    }
-    /*
-    * Creates an input of the given type.
-    * @param type The type of input. [expects String]
-    * @param [values] The number of inputs to create or an array of data to map to the value of inputs
-    * If no value or type is supplied it will return one radio button. [expects Number || Array]
-    * @return Array Array of the inputs
-    */
-    _quizzy.createInput = function(type,values){
-        type = type || 'radio';
-        type = type.toLowerCase();
-        var inputs = [];
-        if(!isNaN(values)){
-            for(var i = 0; i < values; i++){
-                if(type == 'radio'){
-                    inputs.push(_quizzy.createRadioButton('quizzy-radio'));
-                }
-            }
-        }else if(values){
-            for(var i = 0; i < values.length; i++){
-                if(type == 'radio'){
-                    inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
-                }
-            }
-        }else{inputs.push(_quizzy.createRadioButton('quizzy-radio'))}
-        
-        return inputs;
-    }
-    /*
-    * Creates a radio button
-    * @param [name] Name of the button [expects String || Number]
-    * @param [value] Value of the button [expects String || Number]
-    * @param [id] Id of the button [expects String || Number]
-    * @param [classes] Button classes [expects String || Number || Array]
-    * @return element Radio button element
-    */
-    _quizzy.createRadioButton = function(name,value,id,classes){
-        var radioBtn = document.createElement('input');
-        radioBtn.type = 'radio';
-        radioBtn.name = name || '';
-        radioBtn.value = value || '';
-        radioBtn.id = id || '';
-        if(classes instanceof  Array){
-            var d = " ";
-            for(var i = 0; i < classes.length; i++){
-                d += classes[i]+" ";
-            }
-            classes = d;
-        }
-        radioBtn.className = d;
-        return radioBtn;
-    }
+    
 
     /*
     * Creates the main quiz interface
@@ -317,6 +257,67 @@ var quizzy = (function(){
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizContainer.insertBefore(congratsMsg,_quizContainer.firstChild);
+    }
+    /*
+    * Wraps the given input in a label.
+    * @return element
+    */
+    _quizzy.wrapInLabel = function(input,value){
+        var label = document.createElement('label');
+        label.appendChild(input);
+        label.innerHTML += value || input.value;
+        return label;
+    }
+    /*
+    * Creates an input of the given type.
+    * @param type The type of input. [expects String]
+    * @param [values] The number of inputs to create or an array of data to map to the value of inputs
+    * If no value or type is supplied it will return one radio button. [expects Number || Array]
+    * @return Array Array of the inputs
+    */
+    _quizzy.createInput = function(type,values){
+        type = type || 'radio';
+        type = type.toLowerCase();
+        var inputs = [];
+        if(!isNaN(values)){
+            for(var i = 0; i < values; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio'));
+                }
+            }
+        }else if(values){
+            for(var i = 0; i < values.length; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
+                }
+            }
+        }else{inputs.push(_quizzy.createRadioButton('quizzy-radio'))}
+        
+        return inputs;
+    }
+    /*
+    * Creates a radio button
+    * @param [name] Name of the button [expects String || Number]
+    * @param [value] Value of the button [expects String || Number]
+    * @param [id] Id of the button [expects String || Number]
+    * @param [classes] Button classes [expects String || Number || Array]
+    * @return element Radio button element
+    */
+    _quizzy.createRadioButton = function(name,value,id,classes){
+        var radioBtn = document.createElement('input');
+        radioBtn.type = 'radio';
+        radioBtn.name = name || '';
+        radioBtn.value = value || '';
+        radioBtn.id = id || '';
+        if(classes instanceof  Array){
+            var d = " ";
+            for(var i = 0; i < classes.length; i++){
+                d += classes[i]+" ";
+            }
+            classes = d;
+        }
+        radioBtn.className = d;
+        return radioBtn;
     }
     /*
     * Wrapper function for adding events
