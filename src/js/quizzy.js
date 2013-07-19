@@ -32,6 +32,7 @@ var quizzy = (function(){
         this.question = q.question;
         this.answer = q.answer; 
         this.choices = q.choices;
+        for(var i = 0;i<this.choices.length;i++){this.choices[i] = this.choices[i]+""}
         this.score = q.score || _quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
         this.type = q.type || _quizzyConstants.STRING_RADIO;
         this.userChoice = null;

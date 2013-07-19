@@ -2,7 +2,7 @@ var qConfig ={
     questions :[
         {   question: "How many masks can you obtain in Legend of Zelda : Majora's Mask",
             choices : [12,17,24,29],
-            answer : 3
+            answer : 2
         },
         {   question: "How much time do you have to save the world in Legend of Zelda : Majora's Mask",
             choices : ["13 Days","2 Weeks","1 Month","3 Days"],
