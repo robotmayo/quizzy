@@ -10,15 +10,15 @@ var qConfig ={
         },
         {   question: "What does the Bunny Hood do?",
             choices : ["Grants you a movement boost","Allows you to talk to small rodents","Turns you into a bunny"],
-            answer : 1
+            answer : 0
         },
         {   question: "What system did Majora's Mask release on?",
             choices : ["Nintendo 64","Nintendo Gamecube","Dreamcast"],
-            answer : 1
+            answer : 0
         },
         {   question: "How many giants are needed to stop the moon?",
             choices : ["Four","Three","Six","Two"],
-            answer : 2
+            answer : 0
         }
     ]
 }
