@@ -30,7 +30,7 @@ var quizzy = (function(){
 
     QuizzyQuestion = function(q){
         this.question = q.question;
-        this.answer = q.choices[q.answer] || null;
+        this.answer = q.answer; 
         this.choices = q.choices;
         this.score = q.score || _quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
         this.type = q.type || _quizzyConstants.STRING_RADIO;
@@ -215,6 +215,7 @@ var quizzy = (function(){
     */
     _quizzy.checkAnswer = function(){
         var choice;
+        var answerIndex = _quizzy.currentQuestion.value.answer;
         var inputs = _inputWrap.getElementsByTagName("input");
         for(var i = 0; i < inputs.length; i++){
             if(inputs[i].checked){
@@ -222,7 +223,7 @@ var quizzy = (function(){
             }
         }
         if(choice){
-            if(choice == _quizzy.currentQuestion.value.answer) {
+            if(choice == _quizzy.currentQuestion.value.choices[answerIndex]) {
                 _score += _quizzy.currentQuestion.value.score;
             }
             _quizzy.nextQuestion();
