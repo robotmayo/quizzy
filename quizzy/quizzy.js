@@ -1,11 +1,11 @@
-/*! quizzy - v0.0.5 - 2013-07-15
+/*! quizzy - v0.0.5 - 2013-07-18
 * Copyright (c) 2013 ; Licensed  */
 
 var quizzy = (function(){
     var _quizzy = {};
-    var quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
-    quizzyConstants.STRING_RADIO = "radio";
-    quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION = 1;
+    var _quizzyConstants = {}; // I GUESS THEY ARE CALLED CONSTANTS BECAUSE THEY ARE CONSTANTLY YELLING
+    _quizzyConstants.STRING_RADIO = "radio";
+    _quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION = 1;
 
     // Data
     var _questions;
@@ -14,7 +14,8 @@ var quizzy = (function(){
         allowBackTrack : false,
         showHistory : false,
         backDistance : 0,
-        shuffle : false
+        shuffle : false,
+        questions : null
     }
 
     // Display
@@ -27,25 +28,27 @@ var quizzy = (function(){
     _quizzy.currentQuestion;
     _quizzy.questions;
     _quizzy.config;
+    _quizzy.qElements;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
-        this.answer = q.choices[q.answer] || null;
+        this.answer = q.answer; 
         this.choices = q.choices;
-        this.score = q.score || _quizzy.NUMBER_DEFAULT_SCORE_PER_QUESTION;
-        this.type = q.type || quizzyConstants.STRING_RADIO;
+        for(var i = 0;i<this.choices.length;i++){this.choices[i] = this.choices[i]+""}
+        this.score = q.score || _quizzyConstants.NUMBER_DEFAULT_SCORE_PER_QUESTION;
+        this.type = q.type || _quizzyConstants.STRING_RADIO;
         this.userChoice = null;
     }
     /*
     * The starting point for quizzy.
-    * @param config : A plain JavaScript object containing the config to use.
+    * @param config : A plain JavaScript object containing the configurations to use.
     * @return none
     */
     _quizzy.init = function(config){
         if(config) {
             mergeConfigs(config);
         }else{_quizzy.config = _defaultConfig;}
-        _quizzy.setUpQuestions();
+        _quizzy.setUpQuestions(_quizzy.config.questions);
         
         _quizContainer = document.getElementById("quizzy");
         if(_quizContainer == null){
@@ -57,12 +60,18 @@ var quizzy = (function(){
         _quizzy.start();
     }
     /*
-    * Fetches the questions then makes a copy for internal use. Turns the questions into QuizzyQuestion objects first.
+    * Sets up the questions into a format for internal use. Will use the param for the questions if supplied,
+    * otherwise looks for QuizzyQuestions array
+    * @param q : An array of objects representing the questions.
     * @return none
     */
-    _quizzy.setUpQuestions = function(test){
-        var temp = QuizzyQuestions.slice();
-        if(test)temp=test.slice();
+    _quizzy.setUpQuestions = function(q){
+        var temp;
+        if(q) {
+            temp = q.slice();
+        }else{
+            temp = QuizzyQuestions.slice();
+        }
         _quizzy.questions = [];
         for(var i = 0; i < temp.length;i++){
             _quizzy.questions.push(new QuizzyQuestion(temp[i]));
@@ -71,7 +80,6 @@ var quizzy = (function(){
         _questions = _quizzy.questions.slice();
         quizzyUtils.shuffleArray(_questions);
         _questions = new QuizzyList(_questions);
-        //_questions.arrayToList(_quizzy.questions.slice());
     }
     /*
     * Fetches the first question and updates the interface. A starting point for the quiz. 
@@ -109,73 +117,17 @@ var quizzy = (function(){
         frag = inputs = null;
         
     }
-    /*
-    * Wraps the given input in a label.
-    * @return element
-    */
-    _quizzy.wrapInLabel = function(input,value){
-        var label = document.createElement('label');
-        label.appendChild(input);
-        label.innerHTML += value || input.value;
-        return label;
-    }
-    /*
-    * Creates an input of the given type.
-    * @param type The type of input. [expects String]
-    * @param [values] The number of inputs to create or an array of data to map to the value of inputs
-    * If no value or type is supplied it will return one radio button. [expects Number || Array]
-    * @return Array Array of the inputs
-    */
-    _quizzy.createInput = function(type,values){
-        type = type || 'radio';
-        type = type.toLowerCase();
-        var inputs = [];
-        if(!isNaN(values)){
-            for(var i = 0; i < values; i++){
-                if(type == 'radio'){
-                    inputs.push(_quizzy.createRadioButton('quizzy-radio'));
-                }
-            }
-        }else if(values){
-            for(var i = 0; i < values.length; i++){
-                if(type == 'radio'){
-                    inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
-                }
-            }
-        }else{inputs.push(_quizzy.createRadioButton('quizzy-radio'))}
-        
-        return inputs;
-    }
-    /*
-    * Creates a radio button
-    * @param [name] Name of the button [expects String || Number]
-    * @param [value] Value of the button [expects String || Number]
-    * @param [id] Id of the button [expects String || Number]
-    * @param [classes] Button classes [expects String || Number || Array]
-    * @return element Radio button element
-    */
-    _quizzy.createRadioButton = function(name,value,id,classes){
-        var radioBtn = document.createElement('input');
-        radioBtn.type = 'radio';
-        radioBtn.name = name || '';
-        radioBtn.value = value || '';
-        radioBtn.id = id || '';
-        if(classes instanceof  Array){
-            var d = " ";
-            for(var i = 0; i < classes.length; i++){
-                d += classes[i]+" ";
-            }
-            classes = d;
-        }
-        radioBtn.className = d;
-        return radioBtn;
-    }
+    
 
     /*
     * Creates the main quiz interface
     * @return none
     */
     _quizzy.createQuizInterface = function(){
+        _quizzy.qElements = {
+            fragment : document.createDocumentFragment(),
+            questionTitle : document.createElement('h2')
+        }
         _frag = document.createDocumentFragment();
         _title = document.createElement('h2');
         _title.id = "quizzy-title";
@@ -193,8 +145,6 @@ var quizzy = (function(){
         _frag.appendChild(_inputWrap);
         _frag.appendChild(_buttons.next);
         _quizContainer.appendChild(_frag);
-        
-        while(_frag.lastChild){_frag.removeChild(_frag.lastChild)}
     }
     /*
     * Creates a button
@@ -268,6 +218,7 @@ var quizzy = (function(){
     */
     _quizzy.checkAnswer = function(){
         var choice;
+        var answerIndex = _quizzy.currentQuestion.value.answer;
         var inputs = _inputWrap.getElementsByTagName("input");
         for(var i = 0; i < inputs.length; i++){
             if(inputs[i].checked){
@@ -275,7 +226,7 @@ var quizzy = (function(){
             }
         }
         if(choice){
-            if(choice == _quizzy.currentQuestion.value.answer) {
+            if(choice == _quizzy.currentQuestion.value.choices[answerIndex]) {
                 _score += _quizzy.currentQuestion.value.score;
             }
             _quizzy.nextQuestion();
@@ -300,7 +251,7 @@ var quizzy = (function(){
     * Ends the quiz, displaying a message and score if allowed.
     */
     _quizzy.end = function(){
-        _title.remove();
+        _title.parentNode.removeChild(_title);
         var child = _inputWrap.firstChild;
         while(child){
             removeNode = child;
@@ -310,6 +261,67 @@ var quizzy = (function(){
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizContainer.insertBefore(congratsMsg,_quizContainer.firstChild);
+    }
+    /*
+    * Wraps the given input in a label.
+    * @return element
+    */
+    _quizzy.wrapInLabel = function(input,value){
+        var label = document.createElement('label');
+        label.appendChild(input);
+        label.innerHTML += value || input.value;
+        return label;
+    }
+    /*
+    * Creates an input of the given type.
+    * @param type The type of input. [expects String]
+    * @param [values] The number of inputs to create or an array of data to map to the value of inputs
+    * If no value or type is supplied it will return one radio button. [expects Number || Array]
+    * @return Array Array of the inputs
+    */
+    _quizzy.createInput = function(type,values){
+        type = type || 'radio';
+        type = type.toLowerCase();
+        var inputs = [];
+        if(!isNaN(values)){
+            for(var i = 0; i < values; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio'));
+                }
+            }
+        }else if(values){
+            for(var i = 0; i < values.length; i++){
+                if(type == 'radio'){
+                    inputs.push(_quizzy.createRadioButton('quizzy-radio',values[i]));
+                }
+            }
+        }else{inputs.push(_quizzy.createRadioButton('quizzy-radio'))}
+        
+        return inputs;
+    }
+    /*
+    * Creates a radio button
+    * @param [name] Name of the button [expects String || Number]
+    * @param [value] Value of the button [expects String || Number]
+    * @param [id] Id of the button [expects String || Number]
+    * @param [classes] Button classes [expects String || Number || Array]
+    * @return element Radio button element
+    */
+    _quizzy.createRadioButton = function(name,value,id,classes){
+        var radioBtn = document.createElement('input');
+        radioBtn.type = 'radio';
+        radioBtn.name = name || '';
+        radioBtn.value = value || '';
+        radioBtn.id = id || '';
+        if(classes instanceof  Array){
+            var d = " ";
+            for(var i = 0; i < classes.length; i++){
+                d += classes[i]+" ";
+            }
+            classes = d;
+        }
+        radioBtn.className = d;
+        return radioBtn;
     }
     /*
     * Wrapper function for adding events
