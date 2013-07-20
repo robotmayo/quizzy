@@ -108,7 +108,8 @@ var quizzy = (function(){
     
 
     /*
-    * Creates the main quiz interface
+    * Creates the main quiz interface. If a startingpoint is defined and can be found the quiz elements will be placed in
+    * a quizzy div inside that element. Otherwise it looks for the quizzy id on the page.
     * @return none
     */
     _quizzy.createQuizInterface = function(){
