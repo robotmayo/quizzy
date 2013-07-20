@@ -26,7 +26,7 @@ var quizzy = (function(){
     _quizzy.currentQuestion;
     _quizzy.questions;
     _quizzy.config;
-    _quizzy.qElements;
+    _quizzy.quizElements;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -122,7 +122,7 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.createQuizInterface = function(){
-        _quizzy.qElements = {
+        _quizzy.quizElements = {
             fragment : document.createDocumentFragment(),
             questionTitle : document.createElement('h2')
         }
