@@ -13,7 +13,8 @@ var quizzy = (function(){
         showHistory : false,
         backDistance : 0,
         shuffle : false,
-        questions : null
+        questions : null,
+        startPoint : null,
     }
 
     _quizzy.currentQuestion;
@@ -129,11 +130,11 @@ var quizzy = (function(){
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.quizHeader);
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.inputWrap);
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.next);
-        if(_quizzy.config.startPoint){
+        if(_quizzy.config.startPoint && document.getElementById(_quizzy.config.startPoint)){
             _quizzy.quizElements.container = document.createElement('div');
             _quizzy.quizElements.id = 'quizzy';
             _quizzy.quizElements.container.appendChild(_quizzy.quizElements.fragment);
-            _quizzy.config.startPoint.appendChild(_quizzy.quizElements.container);
+            document.getElementById(_quizzy.config.startPoint).appendChild(_quizzy.quizElements.container);
         }else{
             _quizzy.quizElements.container = document.getElementById('quizzy');
             _quizzy.quizElements.container.appendChild(_quizzy.quizElements.fragment);
