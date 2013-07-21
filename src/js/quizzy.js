@@ -408,3 +408,13 @@ quizzyUtils.shuffleArray = function(array){
         array[store] = swap;
     }
 }
+quizzyUtils.hideElement = function(el){
+    if(el.style.display === 'none') return;
+    el.style.display = 'none';
+    el.style.visibility = 'hidden';
+}
+quizzyUtils.showElement = function(el){
+    if(el.style.display !== 'none') return;
+    el.style.display = '';
+    el.style.visibility = '';
+}
