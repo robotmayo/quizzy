@@ -1,4 +1,4 @@
-/*! quizzy - v0.0.5 - 2013-07-20
+/*! quizzy - v0.0.5 - 2013-07-21
 * Copyright (c) 2013 ; Licensed  */
 
 var quizzy = (function(){
@@ -128,13 +128,17 @@ var quizzy = (function(){
         _quizzy.quizElements.quizHeader.id = "quizzy-title";
         _quizzy.quizElements.inputWrap.id = "quizzy-input-wrap";
         _quizzy.quizElements.buttons.next = _quizzy.createButton(_quizzy.config.nextBtnText,"quizzy-next");
-        _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
         _quizzy.quizElements.buttons.restart = _quizzy.createButton(_quizzy.config.restartBtnText,"quizzy-restart");
         addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.nextQuestion);
-        addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
 
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.quizHeader);
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.inputWrap);
+        if(_quizzy.config.allowBackTrack){
+            _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
+            addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
+            _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.prev);
+            quizzyUtils.hideElement(_quizzy.quizElements.buttons.prev);
+        } 
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.next);
         if(_quizzy.config.startPoint && document.getElementById(_quizzy.config.startPoint)){
             _quizzy.quizElements.container = document.createElement('div');
@@ -176,6 +180,13 @@ var quizzy = (function(){
         return _quizzy.currentQuestion.next || false;
     }
     /*
+    * Returns the node of the previous question if there is one otherwise returns false
+    * @return node || false
+    */
+    _quizzy.getPrevQuestion = function(){
+        return _quizzy.currentQuestion.prev || false;
+    }
+    /*
     * Jumps to the given question. Nothing happens if the question isn't found.
     * @param index The question to jump to
     */
@@ -183,11 +194,20 @@ var quizzy = (function(){
 
     }
     /*
-    * Returns the node of the previous question
-    * @return node
+    * Sets the current question to the previous one and updates the interface. 
+    * If there is none or going back is dissallowed the method does nothing.
+    * @return none
     */
     _quizzy.prevQuestion = function(){
-
+        if(_quizzy.config.allowBackTrack){
+            var prev = _quizzy.getPrevQuestion();
+            if(prev !== false) {
+                _quizzy.currentQuestion = prev;
+                console.log(_quizzy.currentQuestion.prev);
+                _quizzy.updateQuizInterface();
+                if(!_quizzy.currentQuestion.prev) quizzyUtils.hideElement(_quizzy.quizElements.buttons.prev);
+            }
+        }
     }
     /*
     * Sets the current question to the next question and updates the interface. If there is none the end method is called.
@@ -204,6 +224,8 @@ var quizzy = (function(){
         if(next === false) {
             _quizzy.end();
         }else{
+            if(_quizzy.config.allowBackTrack) quizzyUtils.showElement(_quizzy.quizElements.buttons.prev);
+
             _quizzy.currentQuestion = next;
             _quizzy.updateQuizInterface();
             next = null;
@@ -229,15 +251,6 @@ var quizzy = (function(){
         alert(error);
     }
     /*
-    * Sets the current question to the previous one and updates the interface. 
-    * If there is none or going back is dissallowed the method does nothing.
-    * @return none
-    */
-    _quizzy.prevQuestion = function(){
-        _quizzy.currentQuestion = _quizzy.currentQuestion.prev;
-        _quizzy.updateQuizInterface();
-    }
-    /*
     * Checks the answer.
     * True if answer is correct
     * False if answer is correct or there is no selection
@@ -261,6 +274,21 @@ var quizzy = (function(){
             alert("You didn't input anything!");
         }
     }
+    _quizzy.checkAllAnswers = function(){
+        var check = _questions.getFirst();
+        var i = 0;
+        var correct = false;
+        while(check){
+            for(i = 0; i < check.value.choices.length; i++){
+                correct = false;
+                if(!correct && check.value.userChoice == check.value.choices[i]){
+                    correct = true;
+                    _score += check.value.score;
+                }
+            }
+            check = check.next;
+        }
+    }
     /*
     * Calculates and returns the score
     * @return number
@@ -270,14 +298,17 @@ var quizzy = (function(){
     }
     /*
     * Returns the raw score.
+    * @return number
     */
     _quizzy.getRawScore = function(){
         return _score;
     }
     /*
     * Ends the quiz, displaying a message and score if allowed.
+    * @return none
     */
     _quizzy.end = function(){
+        _quizzy.checkAllAnswers();
         _quizzy.quizElements.quizHeader.parentNode.removeChild(_quizzy.quizElements.quizHeader);
         var child = _quizzy.quizElements.inputWrap.firstChild;
         while(child){
@@ -380,7 +411,7 @@ var quizzy = (function(){
     return _quizzy;
 }());
 var quizzyUtils = {};
-quizzyUtils.getRandom = function(min,max){
+quizzyUtils.getRandomInteger = function(min,max){
     return min + Math.floor(Math.random() * (max - min + 1));
 }
 // Shuffle array in place
@@ -388,11 +419,21 @@ quizzyUtils.shuffleArray = function(array){
     var swap;
     var store;
     for(var i = array.length-1; i >= 0; i--){
-        store = this.getRandom(0,i);
+        store = this.getRandomInteger(0,i);
         swap = array[i];
         array[i] = array[store];
         array[store] = swap;
     }
+}
+quizzyUtils.hideElement = function(el){
+    if(el.style.display === 'none') return;
+    el.style.display = 'none';
+    el.style.visibility = 'hidden';
+}
+quizzyUtils.showElement = function(el){
+    if(el.style.display !== 'none') return;
+    el.style.display = '';
+    el.style.visibility = '';
 };var QuizzyList = function(array){
     var _ll = {};
     var _first;
