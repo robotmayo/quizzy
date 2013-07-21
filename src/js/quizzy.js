@@ -197,8 +197,9 @@ var quizzy = (function(){
             _quizzy.showError("Please select an answer");
             return;
         }
+        _quizzy.currentQuestion.value.userChoice = userSelection;
         var next = _quizzy.getNextQuestion();
-        if(next === null) {
+        if(next === false) {
             _quizzy.end();
         }else{
             _quizzy.currentQuestion = next;
