@@ -17,8 +17,10 @@ var quizzy = (function(){
         startPoint : null,
         nextBtnText : "Next Question",
         prevBtnText : "Previous Question",
-        restartBtnText : "Restart Quiz"
+        restartBtnText : "Restart Quiz",
+        quizTimer : false
     }
+    var _quizLengthTimer;
 
     _quizzy.currentQuestion;
     _quizzy.questions;
@@ -47,7 +49,11 @@ var quizzy = (function(){
         _score = 0;
         _quizzy.questionCount = _questions.size();
         _quizzy.createQuizInterface();
+        _quizzy.setUpTimers();
         _quizzy.start();
+    }
+    _quizzy.setUpTimers = function(){
+        throw new Error("Not yet implemented");
     }
     /*
     * Sets up the questions into a format for internal use. Will use the param for the questions if supplied,
