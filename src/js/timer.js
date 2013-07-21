@@ -12,14 +12,12 @@ QuizzyTimer = function(tick,handler,start){
     this.minutes = 0;
     this.seconds = 0;
     this.milliseconds = 0;
-    console.log(this.tick);
 
     if(start){
         this.start();
     }
 }
 QuizzyTimer.prototype.start = function() {
-    console.log(this.tick);
     this.last = Date.now();
     var self = this;
     this.intervalId = setInterval(function(){
@@ -51,6 +49,14 @@ QuizzyTimer.prototype.getTime = function() {
         seconds:this.seconds,
         milliseconds:this.clock
     };
+};
+QuizzyTimer.prototype.getTotalTime = function() {
+    return{
+        hours : this.clock / _hours,
+        minutes : this.clock / _minutes,
+        seconds : this.clock / _seconds,
+        milliseconds : this.clock
+    }
 };
 QuizzyTimer.prototype.printTime = function() {
     var time = this.getTime();
