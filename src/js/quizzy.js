@@ -128,7 +128,7 @@ var quizzy = (function(){
         _quizzy.quizElements.buttons.next = _quizzy.createButton(_quizzy.config.nextBtnText,"quizzy-next");
         _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
         _quizzy.quizElements.buttons.restart = _quizzy.createButton(_quizzy.config.restartBtnText,"quizzy-restart");
-        addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.checkAnswer);
+        addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.nextQuestion);
         addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
 
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.quizHeader);
