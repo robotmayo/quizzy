@@ -1,4 +1,1 @@
-QuizzyTest.startQuizzy(testConfigOne);
-QuizzyTest.$getNextQuestionWhenNone();
-QuizzyTest.$getUserSelectionNoSelection();
-QuizzyTest.$getUserSelectionWithSelection();
+QuizzyTest.startQuizzy(timerConfig);

@@ -18,7 +18,8 @@ var quizzy = (function(){
         nextBtnText : "Next Question",
         prevBtnText : "Previous Question",
         restartBtnText : "Restart Quiz",
-        quizTimer : false
+        quizTimer : false,
+        trackQuizTime : false
     }
     var _quizLengthTimer;
 
@@ -53,7 +54,9 @@ var quizzy = (function(){
         _quizzy.start();
     }
     _quizzy.setUpTimers = function(){
-        throw new Error("Not yet implemented");
+        if(_quizzy.config.quizTimer){
+            if(_quizzy.config.trackQuizTime) _quizLengthTimer = new QuizzyTimer(50,function(){console.log("Working")});
+        }
     }
     /*
     * Sets up the questions into a format for internal use. Will use the param for the questions if supplied,
@@ -85,6 +88,7 @@ var quizzy = (function(){
     _quizzy.start = function(){
         _quizzy.currentQuestion = _questions.getFirst();
         _quizzy.updateQuizInterface();
+        if(_quizLengthTimer !== undefined) _quizLengthTimer.start();
     }
     /*
     * Updates the quiz interface with information from the current question. Currently a bit inneficient and rigid.
@@ -323,6 +327,8 @@ var quizzy = (function(){
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizzy.quizElements.container.insertBefore(congratsMsg,_quizzy.quizElements.container.firstChild);
+        _quizLengthTimer.printTime();
+        _quizLengthTimer.stop();
     }
     /*
     * Wraps the given input in a label.
