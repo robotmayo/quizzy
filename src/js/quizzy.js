@@ -219,7 +219,7 @@ var quizzy = (function(){
         return choice;
     }
     /*
-    * Displays an error message
+    * Displays an error message. Implementation not complete, the alert is just a placeholder.
     * @return none
     */
     _quizzy.showError = function(error){
