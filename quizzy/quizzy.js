@@ -1,4 +1,4 @@
-/*! quizzy - v0.0.5 - 2013-07-18
+/*! quizzy - v0.0.5 - 2013-07-20
 * Copyright (c) 2013 ; Licensed  */
 
 var quizzy = (function(){
@@ -15,20 +15,17 @@ var quizzy = (function(){
         showHistory : false,
         backDistance : 0,
         shuffle : false,
-        questions : null
+        questions : null,
+        startPoint : null,
+        nextBtnText : "Next Question",
+        prevBtnText : "Previous Question",
+        restartBtnText : "Restart Quiz"
     }
-
-    // Display
-    var _quizContainer;
-    var _frag;
-    var _title;
-    var _inputWrap;
-    var _buttons;
 
     _quizzy.currentQuestion;
     _quizzy.questions;
     _quizzy.config;
-    _quizzy.qElements;
+    _quizzy.quizElements;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -49,11 +46,6 @@ var quizzy = (function(){
             mergeConfigs(config);
         }else{_quizzy.config = _defaultConfig;}
         _quizzy.setUpQuestions(_quizzy.config.questions);
-        
-        _quizContainer = document.getElementById("quizzy");
-        if(_quizContainer == null){
-            throw new Error("Couldn't find quizzy starting element. Aborting mission!");
-        }
         _score = 0;
         _quizzy.questionCount = _questions.size();
         _quizzy.createQuizInterface();
@@ -97,9 +89,9 @@ var quizzy = (function(){
     _quizzy.updateQuizInterface = function(){
         var inputs;
         var i;
-        _title.innerHTML = _quizzy.currentQuestion.value.question;
+        _quizzy.quizElements.quizHeader.innerHTML = _quizzy.currentQuestion.value.question;
         var frag = document.createDocumentFragment();
-        var child = _inputWrap.firstChild;
+        var child = _quizzy.quizElements.inputWrap.firstChild;
         var removeNode;
         while(child){
             removeNode = null;
@@ -113,38 +105,46 @@ var quizzy = (function(){
         for(i = 0; i < inputs.length; i++){
             frag.appendChild(_quizzy.wrapInLabel(inputs[i]));
         }
-        _inputWrap.appendChild(frag);
+        _quizzy.quizElements.inputWrap.appendChild(frag);
         frag = inputs = null;
         
     }
     
 
     /*
-    * Creates the main quiz interface
+    * Creates the main quiz interface. If a startingpoint is defined and can be found the quiz elements will be placed in
+    * a quizzy div inside that element. Otherwise it looks for the quizzy id on the page.
     * @return none
     */
     _quizzy.createQuizInterface = function(){
-        _quizzy.qElements = {
+        _quizzy.quizElements = {
             fragment : document.createDocumentFragment(),
-            questionTitle : document.createElement('h2')
+            quizHeader : document.createElement('h2'),
+            inputWrap : document.createElement('div'),
+            buttons : {},
+            container : null
         }
-        _frag = document.createDocumentFragment();
-        _title = document.createElement('h2');
-        _title.id = "quizzy-title";
 
-        _inputWrap = document.createElement('div');
-        _inputWrap.id = "quizzy-input-wrap";
+        _quizzy.quizElements.quizHeader.id = "quizzy-title";
+        _quizzy.quizElements.inputWrap.id = "quizzy-input-wrap";
+        _quizzy.quizElements.buttons.next = _quizzy.createButton(_quizzy.config.nextBtnText,"quizzy-next");
+        _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
+        _quizzy.quizElements.buttons.restart = _quizzy.createButton(_quizzy.config.restartBtnText,"quizzy-restart");
+        addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.nextQuestion);
+        addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
 
-        _buttons = {};
-        _buttons.next = _quizzy.createButton("NEXT","quizzy-next");
-        _buttons.prev = _quizzy.createButton("BACK","quizzy-prev");
-        addEvent('click',_buttons.next,_quizzy.checkAnswer);
-        addEvent('click',_buttons.prev,_quizzy.prevQuestion);
-
-        _frag.appendChild(_title);
-        _frag.appendChild(_inputWrap);
-        _frag.appendChild(_buttons.next);
-        _quizContainer.appendChild(_frag);
+        _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.quizHeader);
+        _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.inputWrap);
+        _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.next);
+        if(_quizzy.config.startPoint && document.getElementById(_quizzy.config.startPoint)){
+            _quizzy.quizElements.container = document.createElement('div');
+            _quizzy.quizElements.id = 'quizzy';
+            _quizzy.quizElements.container.appendChild(_quizzy.quizElements.fragment);
+            document.getElementById(_quizzy.config.startPoint).appendChild(_quizzy.quizElements.container);
+        }else{
+            _quizzy.quizElements.container = document.getElementById('quizzy');
+            _quizzy.quizElements.container.appendChild(_quizzy.quizElements.fragment);
+        }
     }
     /*
     * Creates a button
@@ -169,11 +169,11 @@ var quizzy = (function(){
     }
     
     /*
-    * Returns the node of the next question
-    * @return node
+    * Returns the node of the next question if there is one otherwise returns false
+    * @return node || false
     */
     _quizzy.getNextQuestion = function(){
-        return _quizzy.currentQuestion.next;
+        return _quizzy.currentQuestion.next || false;
     }
     /*
     * Jumps to the given question. Nothing happens if the question isn't found.
@@ -194,12 +194,38 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.nextQuestion = function(){
-        _quizzy.currentQuestion = _quizzy.getNextQuestion();
-        if(!_quizzy.currentQuestion) {
+        var userSelection = _quizzy.getUserSelection();
+        if(userSelection === null){
+            _quizzy.showError("Please select an answer");
+            return;
+        }
+        var next = _quizzy.getNextQuestion();
+        if(next === null) {
             _quizzy.end();
         }else{
+            _quizzy.currentQuestion = next;
             _quizzy.updateQuizInterface();
+            next = null;
         }
+    }
+    /*
+    * Returns the users choices, null if no choice was made.
+    * @return String || null
+    */
+    _quizzy.getUserSelection = function(){
+        var inputs = _quizzy.quizElements.inputWrap.getElementsByTagName('input');
+        var choice = null;
+        for(var i = 0; i < inputs.length; i++){
+            if(inputs[i].checked) choice = inputs[i].value;
+        }
+        return choice;
+    }
+    /*
+    * Displays an error message. Implementation not complete, the alert is just a placeholder.
+    * @return none
+    */
+    _quizzy.showError = function(error){
+        alert(error);
     }
     /*
     * Sets the current question to the previous one and updates the interface. 
@@ -219,7 +245,7 @@ var quizzy = (function(){
     _quizzy.checkAnswer = function(){
         var choice;
         var answerIndex = _quizzy.currentQuestion.value.answer;
-        var inputs = _inputWrap.getElementsByTagName("input");
+        var inputs = _quizzy.quizElements.inputWrap.getElementsByTagName("input");
         for(var i = 0; i < inputs.length; i++){
             if(inputs[i].checked){
                 choice = inputs[i].value;
@@ -251,8 +277,8 @@ var quizzy = (function(){
     * Ends the quiz, displaying a message and score if allowed.
     */
     _quizzy.end = function(){
-        _title.parentNode.removeChild(_title);
-        var child = _inputWrap.firstChild;
+        _quizzy.quizElements.quizHeader.parentNode.removeChild(_quizzy.quizElements.quizHeader);
+        var child = _quizzy.quizElements.inputWrap.firstChild;
         while(child){
             removeNode = child;
             child = child.nextSibling;
@@ -260,7 +286,7 @@ var quizzy = (function(){
         }
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
-        _quizContainer.insertBefore(congratsMsg,_quizContainer.firstChild);
+        _quizzy.quizElements.container.insertBefore(congratsMsg,_quizzy.quizElements.container.firstChild);
     }
     /*
     * Wraps the given input in a label.
