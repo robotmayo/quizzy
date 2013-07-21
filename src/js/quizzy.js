@@ -41,7 +41,6 @@ var quizzy = (function(){
             mergeConfigs(config);
         }else{_quizzy.config = _defaultConfig;}
         _quizzy.setUpQuestions(_quizzy.config.questions);
-
         _score = 0;
         _quizzy.questionCount = _questions.size();
         _quizzy.createQuizInterface();
@@ -125,6 +124,7 @@ var quizzy = (function(){
         _quizzy.quizElements.inputWrap.id = "quizzy-input-wrap";
         _quizzy.quizElements.buttons.next = _quizzy.createButton("NEXT","quizzy-next");
         _quizzy.quizElements.buttons.prev = _quizzy.createButton("BACK","quizzy-prev");
+        _quizzy.quizElements.buttons.restart = _quizzy.createButton("Restart  Quiz","quizzy-restart");
         addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.checkAnswer);
         addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
 
