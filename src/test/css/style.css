@@ -1,0 +1,24 @@
+.fail:before{
+	content : 'Failure: ';
+	color : #AA0000;
+	font-weight: bold;
+}
+.pass:before{
+	content : 'Passed: ';
+	color : #0000AA;
+	font-weight: bold;
+}
+ul{
+	list-style: none;
+}
+li{
+	border: 1px black solid;
+	padding: 5px;
+	margin-bottom: 10px;
+	width : 33%;
+}
+#quizzy{
+	position: fixed;
+	right: 30px;
+	top: 0;
+}
