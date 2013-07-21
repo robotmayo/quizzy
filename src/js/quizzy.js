@@ -131,7 +131,7 @@ var quizzy = (function(){
 
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.quizHeader);
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.inputWrap);
-        if(_quzzy.config.allowBackTrack){
+        if(_quizzy.config.allowBackTrack){
             _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
             addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
             _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.prev);
@@ -192,13 +192,19 @@ var quizzy = (function(){
 
     }
     /*
-    * Returns the node of the previous question
-    * @return node
+    * Sets the current question to the previous one and updates the interface. 
+    * If there is none or going back is dissallowed the method does nothing.
+    * @return none
     */
     _quizzy.prevQuestion = function(){
         if(_quizzy.config.allowBackTrack){
             var prev = _quizzy.getPrevQuestion();
-            if(prev!== false) _quizzy.currentQuestion = prev;
+            if(prev !== false) {
+                _quizzy.currentQuestion = prev;
+                console.log(_quizzy.currentQuestion.prev);
+                _quizzy.updateQuizInterface();
+                if(!_quizzy.currentQuestion.prev) quizzyUtils.hideElement(_quizzy.quizElements.buttons.prev);
+            }
         }
     }
     /*
@@ -241,15 +247,6 @@ var quizzy = (function(){
     */
     _quizzy.showError = function(error){
         alert(error);
-    }
-    /*
-    * Sets the current question to the previous one and updates the interface. 
-    * If there is none or going back is dissallowed the method does nothing.
-    * @return none
-    */
-    _quizzy.prevQuestion = function(){
-        _quizzy.currentQuestion = _quizzy.currentQuestion.prev;
-        _quizzy.updateQuizInterface();
     }
     /*
     * Checks the answer.
