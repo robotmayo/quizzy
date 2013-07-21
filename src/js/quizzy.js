@@ -197,11 +197,13 @@ var quizzy = (function(){
             _quizzy.showError("Please select an answer");
             return;
         }
-        _quizzy.currentQuestion = _quizzy.getNextQuestion();
-        if(!_quizzy.currentQuestion) {
+        var next = _quizzy.getNextQuestion();
+        if(next === null) {
             _quizzy.end();
         }else{
+            _quizzy.currentQuestion = next;
             _quizzy.updateQuizInterface();
+            next = null;
         }
     }
     /*
