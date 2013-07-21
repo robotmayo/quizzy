@@ -10,8 +10,16 @@ var QuizzyTest = (function(){
         for(var i = 0; i < inputs.length; i++){
             if(inputs[i].checked) inputs[i].checked = !inputs[i].checked;
         }
-        choice = quizzy.getUserChoice();
+        choice = quizzy.getUserSelection();
         assert(choice === null, 'Should be null as I unchecked everything');
+    }
+
+    _test.$getUserSelectionWithSelection = function(){
+        var inputs = quizzy.quizElements.inputWrap.getElementsByTagName('input');
+        var choice = null;
+        inputs[0].checked = true;
+        choice = quizzy.getUserSelection();
+        assert(choice !== null, 'Should not be null as I checked something');
     }
 
     _test.startQuizzy = function(config){
