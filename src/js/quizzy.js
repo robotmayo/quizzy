@@ -272,6 +272,21 @@ var quizzy = (function(){
             alert("You didn't input anything!");
         }
     }
+    _quizzy.checkAllAnswers = function(){
+        var check = _questions.getFirst();
+        var i = 0;
+        var correct = false;
+        while(check){
+            for(i = 0; i < check.value.choices.length; i++){
+                correct = false;
+                if(!correct && check.value.userChoice == check.value.choices[i]){
+                    correct = true;
+                    _score += check.value.score;
+                }
+            }
+            check = check.next;
+        }
+    }
     /*
     * Calculates and returns the score
     * @return number
@@ -291,6 +306,7 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.end = function(){
+        _quizzy.checkAllAnswers();
         _quizzy.quizElements.quizHeader.parentNode.removeChild(_quizzy.quizElements.quizHeader);
         var child = _quizzy.quizElements.inputWrap.firstChild;
         while(child){
