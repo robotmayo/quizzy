@@ -192,6 +192,10 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.nextQuestion = function(){
+        var userSelection = getUserSelection();
+        if(userSelection === null){
+            _quizzy.showError("Please select an answer");
+        }
         _quizzy.currentQuestion = _quizzy.getNextQuestion();
         if(!_quizzy.currentQuestion) {
             _quizzy.end();
