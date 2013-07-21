@@ -15,6 +15,9 @@ var quizzy = (function(){
         shuffle : false,
         questions : null,
         startPoint : null,
+        nextBtnText : "Next Question",
+        prevBtnText : "Previous Question",
+        restartBtnText : "Restart Quiz"
     }
 
     _quizzy.currentQuestion;
@@ -122,9 +125,9 @@ var quizzy = (function(){
 
         _quizzy.quizElements.quizHeader.id = "quizzy-title";
         _quizzy.quizElements.inputWrap.id = "quizzy-input-wrap";
-        _quizzy.quizElements.buttons.next = _quizzy.createButton("NEXT","quizzy-next");
-        _quizzy.quizElements.buttons.prev = _quizzy.createButton("BACK","quizzy-prev");
-        _quizzy.quizElements.buttons.restart = _quizzy.createButton("Restart  Quiz","quizzy-restart");
+        _quizzy.quizElements.buttons.next = _quizzy.createButton(_quizzy.config.nextBtnText,"quizzy-next");
+        _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
+        _quizzy.quizElements.buttons.restart = _quizzy.createButton(_quizzy.config.restartBtnText,"quizzy-restart");
         addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.checkAnswer);
         addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
 
