@@ -216,6 +216,8 @@ var quizzy = (function(){
         if(next === false) {
             _quizzy.end();
         }else{
+            if(_quizzy.config.allowBackTrack) quizzyUtils.showElement(_quizzy.quizElements.buttons.prev);
+
             _quizzy.currentQuestion = next;
             _quizzy.updateQuizInterface();
             next = null;
@@ -392,7 +394,7 @@ var quizzy = (function(){
     return _quizzy;
 }());
 var quizzyUtils = {};
-quizzyUtils.getRandom = function(min,max){
+quizzyUtils.getRandomInteger = function(min,max){
     return min + Math.floor(Math.random() * (max - min + 1));
 }
 // Shuffle array in place
@@ -400,7 +402,7 @@ quizzyUtils.shuffleArray = function(array){
     var swap;
     var store;
     for(var i = array.length-1; i >= 0; i--){
-        store = this.getRandom(0,i);
+        store = this.getRandomInteger(0,i);
         swap = array[i];
         array[i] = array[store];
         array[store] = swap;
