@@ -1,11 +1,17 @@
 var QuizzyTest = (function(){
     _test = {};
     _test.$getNextQuestionWhenNone = function (){
-        if(quizzy.getNextQuestion() !== false) {
-            throw new Error("Should be false")
-        }else{
-            console.log("Get next questions works as intended");
+        assert(quizzy.getNextQuestion() === false, "Should be false as there is no next question")
+    }
+
+    _test.$getUserSelectionNoSelection = function(){
+        var inputs = quizzy.quizElements.inputWrap.getElementsByTagName('input');
+        var choice = null;
+        for(var i = 0; i < inputs.length; i++){
+            if(inputs[i].checked) inputs[i].checked = !inputs[i].checked;
         }
+        choice = quizzy.getUserChoice();
+        assert(choice === null, 'Should be null as I unchecked everything');
     }
 
     _test.startQuizzy = function(config){
@@ -14,6 +20,15 @@ var QuizzyTest = (function(){
     return _test;
 }());
 
+var output = document.getElementById('output');  
+  
+function assert( outcome, description ) {  
+    var li = document.createElement('li');  
+    li.className = outcome ? 'pass' : 'fail';  
+    li.appendChild( document.createTextNode( description ) );  
+      
+    output.appendChild(li);  
+};
 
 var testConfigOne ={
     questions :[
