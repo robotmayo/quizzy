@@ -32,13 +32,16 @@ QuizzyTimer.prototype.stop = function() {
 QuizzyTimer.prototype.update = function(){
     this.elapsed = Date.now() - this.last;
     this.clock += this.elapsed;
-    this.milliseconds += elapsed;
+    this.milliseconds += this.elapsed;
 
     this.seconds += Math.floor(this.milliseconds / _seconds);
     this.minutes += Math.floor(this.seconds / 60);
     this.hours = Math.floor(this.clock / _hours);
-    if(this.seconds > 60) this.seconds = 0;
-    if(this.minutes > 60) this.
+
+    // This will keep any rolled over values caused by inconsistent timing
+    if(this.minutes >= 60) this.minutes = this.minutes - 60;
+    if(this.seconds >= 60) this.seconds = this.seconds - 60;
+    if(this.milliseconds >= 1000) this.milliseconds = this.milliseconds - 1000;
     this.last = Date.now();
 };
 QuizzyTimer.prototype.getTime = function() {
@@ -58,5 +61,4 @@ QuizzyTimer.prototype.printTime = function() {
     min = time.minutes < 10 ? "0"+time.minutes : time.minutes;
     sec = time.seconds < 10 ? "0"+time.seconds : time.seconds;
     console.log(hr+":"+min+":"+sec);
-
 };
