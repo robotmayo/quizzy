@@ -281,12 +281,14 @@ var quizzy = (function(){
     }
     /*
     * Returns the raw score.
+    * @return number
     */
     _quizzy.getRawScore = function(){
         return _score;
     }
     /*
     * Ends the quiz, displaying a message and score if allowed.
+    * @return none
     */
     _quizzy.end = function(){
         _quizzy.quizElements.quizHeader.parentNode.removeChild(_quizzy.quizElements.quizHeader);
