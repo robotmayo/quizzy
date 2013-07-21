@@ -167,11 +167,11 @@ var quizzy = (function(){
     }
     
     /*
-    * Returns the node of the next question
-    * @return node
+    * Returns the node of the next question if there is one otherwise returns false
+    * @return node || false
     */
     _quizzy.getNextQuestion = function(){
-        return _quizzy.currentQuestion.next;
+        return _quizzy.currentQuestion.next || false;
     }
     /*
     * Jumps to the given question. Nothing happens if the question isn't found.
