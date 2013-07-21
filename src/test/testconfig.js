@@ -60,8 +60,9 @@ var testConfigOne ={
             choices : ["Four","Three","Six","Two"],
             answer : 0
         }
-    ]
-}
+    ],
+    allowBackTrack : true
+};
 var testConfigTwo ={
     questions :[
         {   question: "How many masks can you obtain in Legend of Zelda : Majora's Mask",
@@ -69,4 +70,4 @@ var testConfigTwo ={
             answer : 2
         }
     ]
-}
+};
