@@ -1,12 +1,20 @@
 .fail:before{
 	content : 'Failure: ';
-	color : #AA0000;
+	color : #F5FFF9;
 	font-weight: bold;
 }
 .pass:before{
 	content : 'Passed: ';
 	color : #0000AA;
 	font-weight: bold;
+}
+.fail{
+	background: #FF2C1C;
+	border: 3px solid rgba(255,255,255,.2);
+}
+.pass{
+	background: #247BB2;
+	border: 3px solid rgba(255,255,255,.2);
 }
 ul{
 	list-style: none;
@@ -21,4 +29,7 @@ li{
 	position: fixed;
 	right: 30px;
 	top: 0;
+}
+body{
+	background: #666;
 }
