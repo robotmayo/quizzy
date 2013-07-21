@@ -174,6 +174,13 @@ var quizzy = (function(){
         return _quizzy.currentQuestion.next || false;
     }
     /*
+    * Returns the node of the previous question if there is one otherwise returns false
+    * @return node || false
+    */
+    _quizzy.getPrevQuestion = function(){
+        return _quizzy.currentQuestion.prev || false;
+    }
+    /*
     * Jumps to the given question. Nothing happens if the question isn't found.
     * @param index The question to jump to
     */
@@ -185,7 +192,10 @@ var quizzy = (function(){
     * @return node
     */
     _quizzy.prevQuestion = function(){
-
+        if(_quizzy.config.allowBackTrack){
+            var prev = _quizzy.getPrevQuestion();
+            if(prev!== false) _quizzy.currentQuestion = prev;
+        }
     }
     /*
     * Sets the current question to the next question and updates the interface. If there is none the end method is called.
