@@ -192,9 +192,10 @@ var quizzy = (function(){
     * @return none
     */
     _quizzy.nextQuestion = function(){
-        var userSelection = getUserSelection();
+        var userSelection = _quizzy.getUserSelection();
         if(userSelection === null){
             _quizzy.showError("Please select an answer");
+            return;
         }
         _quizzy.currentQuestion = _quizzy.getNextQuestion();
         if(!_quizzy.currentQuestion) {
@@ -202,6 +203,25 @@ var quizzy = (function(){
         }else{
             _quizzy.updateQuizInterface();
         }
+    }
+    /*
+    * Returns the users choices, null if no choice was made.
+    * @return String || null
+    */
+    _quizzy.getUserSelection = function(){
+        var inputs = _quizzy.quizElements.inputWrap.getElementsByTagName('input');
+        var choice = null;
+        for(var i = 0; i < inputs.length; i++){
+            if(inputs[i].checked) choice = inputs[i].value;
+        }
+        return choice;
+    }
+    /*
+    * Displays an error message
+    * @return none
+    */
+    _quizzy.showError = function(error){
+        alert(error);
     }
     /*
     * Sets the current question to the previous one and updates the interface. 
