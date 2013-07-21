@@ -126,13 +126,17 @@ var quizzy = (function(){
         _quizzy.quizElements.quizHeader.id = "quizzy-title";
         _quizzy.quizElements.inputWrap.id = "quizzy-input-wrap";
         _quizzy.quizElements.buttons.next = _quizzy.createButton(_quizzy.config.nextBtnText,"quizzy-next");
-        _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
         _quizzy.quizElements.buttons.restart = _quizzy.createButton(_quizzy.config.restartBtnText,"quizzy-restart");
         addEvent('click',_quizzy.quizElements.buttons.next,_quizzy.nextQuestion);
-        addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
 
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.quizHeader);
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.inputWrap);
+        if(_quzzy.config.allowBackTrack){
+            _quizzy.quizElements.buttons.prev = _quizzy.createButton(_quizzy.config.prevBtnText,"quizzy-prev");
+            addEvent('click',_quizzy.quizElements.buttons.prev,_quizzy.prevQuestion);
+            _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.prev);
+            quizzyUtils.hideElement(_quizzy.quizElements.buttons.prev);
+        } 
         _quizzy.quizElements.fragment.appendChild(_quizzy.quizElements.buttons.next);
         if(_quizzy.config.startPoint && document.getElementById(_quizzy.config.startPoint)){
             _quizzy.quizElements.container = document.createElement('div');
