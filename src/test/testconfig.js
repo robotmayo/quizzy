@@ -86,5 +86,5 @@ var timerConfig = {
             answer : 0
         }
     ],
-    quizTimelimit : 10
+    quizTimelimit : 3
 }
