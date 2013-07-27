@@ -28,7 +28,6 @@ QuizzyTimer.prototype.stop = function() {
     clearInterval(this.intervalId);
 };
 QuizzyTimer.prototype.update = function(){
-    if(this.handler) this.handler();
     this.elapsed = Date.now() - this.last;
     this.clock += this.elapsed;
     this.milliseconds += this.elapsed;
@@ -42,6 +41,7 @@ QuizzyTimer.prototype.update = function(){
     if(this.seconds >= 60) this.seconds = this.seconds - 60;
     if(this.milliseconds >= 1000) this.milliseconds = this.milliseconds - 1000;
     this.last = Date.now();
+    if(this.handler) this.handler();
 };
 QuizzyTimer.prototype.getTime = function() {
     return {
