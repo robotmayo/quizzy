@@ -27,7 +27,7 @@ var quizzy = (function(){
     _quizzy.questions;
     _quizzy.config;
     _quizzy.quizElements;
-    _quizzy.quizLengthTimer;
+    _quizzy.quizTimer;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -55,8 +55,10 @@ var quizzy = (function(){
         _quizzy.start();
     }
     _quizzy.setUpTimers = function(){
-        if(_quizzy.config.quizTimer){
-            if(_quizzy.config.trackQuizTime) _quizzy.quizLengthTimer = new QuizzyTimer(50,function(){console.log("Working")});
+        if(_quizzy.config.quizTimelimit) _quizzy.config.trackQuizTime = true;
+        if(_quizzy.config.trackQuizTime){
+            _quizzy.quizTimer = new QuizzyTimer(250);
+            if(_quizzy.config.quizTimelimit) _quizzy.quizTimer.handler = _quizzy.checkLimit;
         }
     }
     /*
@@ -89,7 +91,7 @@ var quizzy = (function(){
     _quizzy.start = function(){
         _quizzy.currentQuestion = _questions.getFirst();
         _quizzy.updateQuizInterface();
-        if(_quizzy.quizLengthTimer !== undefined) _quizzy.quizLengthTimer.start();
+        if(_quizzy.quizTimer !== undefined) _quizzy.quizTimer.start();
     }
     /*
     * Updates the quiz interface with information from the current question. Currently a bit inneficient and rigid.
@@ -260,7 +262,7 @@ var quizzy = (function(){
         alert(error);
     }
     _quizzy.checkLimit = function(){
-        if(_quizzy.quizLengthTimer.getTime().seconds >= _quizzy.config.quizTimelimit){
+        if(_quizzy.quizTimer.getTime().seconds >= _quizzy.config.quizTimelimit){
             _quizzy.end();
         }
     }
@@ -333,7 +335,7 @@ var quizzy = (function(){
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizzy.quizElements.container.insertBefore(congratsMsg,_quizzy.quizElements.container.firstChild);
-        if(_quizzy.quizLengthTimer) _quizzy.quizLengthTimer.stop();
+        if(_quizzy.quizTimer) _quizzy.quizTimer.stop();
     }
     /*
     * Wraps the given input in a label.
