@@ -18,8 +18,9 @@ var quizzy = (function(){
         nextBtnText : "Next Question",
         prevBtnText : "Previous Question",
         restartBtnText : "Restart Quiz",
-        quizTimer : false,
-        trackQuizTime : false
+        quizTimelimit : 0,
+        trackQuizTime : false,
+        questionTimeLimit : 0
     }
     var _quizLengthTimer;
 
@@ -327,8 +328,7 @@ var quizzy = (function(){
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizzy.quizElements.container.insertBefore(congratsMsg,_quizzy.quizElements.container.firstChild);
-        _quizLengthTimer.printTime();
-        _quizLengthTimer.stop();
+        if(_quizLengthTimer) _quizLengthTimer.stop();
     }
     /*
     * Wraps the given input in a label.
