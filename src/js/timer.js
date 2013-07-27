@@ -28,6 +28,7 @@ QuizzyTimer.prototype.stop = function() {
     clearInterval(this.intervalId);
 };
 QuizzyTimer.prototype.update = function(){
+    if(this.handler) this.handler();
     this.elapsed = Date.now() - this.last;
     this.clock += this.elapsed;
     this.milliseconds += this.elapsed;
