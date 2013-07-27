@@ -22,12 +22,12 @@ var quizzy = (function(){
         trackQuizTime : false,
         questionTimeLimit : 0
     }
-    var _quizLengthTimer;
 
     _quizzy.currentQuestion;
     _quizzy.questions;
     _quizzy.config;
     _quizzy.quizElements;
+    _quizzy.quizLengthTimer;
 
     QuizzyQuestion = function(q){
         this.question = q.question;
@@ -56,7 +56,7 @@ var quizzy = (function(){
     }
     _quizzy.setUpTimers = function(){
         if(_quizzy.config.quizTimer){
-            if(_quizzy.config.trackQuizTime) _quizLengthTimer = new QuizzyTimer(50,function(){console.log("Working")});
+            if(_quizzy.config.trackQuizTime) _quizzy.quizLengthTimer = new QuizzyTimer(50,function(){console.log("Working")});
         }
     }
     /*
@@ -89,7 +89,7 @@ var quizzy = (function(){
     _quizzy.start = function(){
         _quizzy.currentQuestion = _questions.getFirst();
         _quizzy.updateQuizInterface();
-        if(_quizLengthTimer !== undefined) _quizLengthTimer.start();
+        if(_quizzy.quizLengthTimer !== undefined) _quizzy.quizLengthTimer.start();
     }
     /*
     * Updates the quiz interface with information from the current question. Currently a bit inneficient and rigid.
@@ -259,6 +259,11 @@ var quizzy = (function(){
     _quizzy.showError = function(error){
         alert(error);
     }
+    _quizzy.checkLimit = function(){
+        if(_quizzy.quizLengthTimer.getTime().seconds >= _quizzy.config.quizTimelimit){
+            _quizzy.end();
+        }
+    }
     /*
     * Checks the answer.
     * True if answer is correct
@@ -328,7 +333,7 @@ var quizzy = (function(){
         var congratsMsg = document.createElement('h2');
         congratsMsg.innerHTML = "Your final score is: "+ _quizzy.calculateScore();
         _quizzy.quizElements.container.insertBefore(congratsMsg,_quizzy.quizElements.container.firstChild);
-        if(_quizLengthTimer) _quizLengthTimer.stop();
+        if(_quizzy.quizLengthTimer) _quizzy.quizLengthTimer.stop();
     }
     /*
     * Wraps the given input in a label.
