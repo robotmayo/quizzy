@@ -86,6 +86,5 @@ var timerConfig = {
             answer : 0
         }
     ],
-    quizTimer : true,
-    trackQuizTime : true
+    quizTimelimit : 10
 }
