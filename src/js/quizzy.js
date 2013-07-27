@@ -58,7 +58,11 @@ var quizzy = (function(){
         if(_quizzy.config.quizTimelimit) _quizzy.config.trackQuizTime = true;
         if(_quizzy.config.trackQuizTime){
             _quizzy.quizTimer = new QuizzyTimer(250);
-            if(_quizzy.config.quizTimelimit) _quizzy.quizTimer.handler = _quizzy.checkLimit;
+            if(!isNaN(_quizzy.config.quizTimelimit) && _quizzy.config.quizTimelimit > 0){
+                _quizzy.quizTimer.handler = _quizzy.checkTimeLimit;
+            }else{
+                throw new Error("The specified time limit does not meet the criteria of being a non-negative number.");
+            }
         }
     }
     /*
@@ -261,7 +265,7 @@ var quizzy = (function(){
     _quizzy.showError = function(error){
         alert(error);
     }
-    _quizzy.checkLimit = function(){
+    _quizzy.checkTimeLimit = function(){
         if(_quizzy.quizTimer.getTime().seconds >= _quizzy.config.quizTimelimit){
             _quizzy.end();
         }
